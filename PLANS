@@ -1,0 +1,8 @@
+- [x] Add support for custom directories into new script if anyone actually wants it
+- [x] Change script to use questions instead of arguments for ease of use
+- [x] Add argument to install BeautifulDiscord and use sans' Arc-Dark theme by default
+- [x] Add argument to install BetterDiscord for default install (perhaps add question to link `/opt/DiscordCanary` to user's install directory during install)
+- [x] Add options for PTB and Stable versions of Discord
+- [x] Add option for Debian based distributions to use .deb package
+- [x] Figure out how to prevent users from adding a / to the end of the direcory with certain arguments (Thanks unrealcroissant!)
+- [x] Possibly figure out how to search for existing Discord install instead of having user input it themselves

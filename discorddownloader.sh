@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DDVER="1.3.0"
+DDVER="1.3.1"
 
 maininst () {
 	INSTDIR="$(< ~/.config/discorddownloader/"$VER"dir.conf)"
@@ -218,11 +218,11 @@ npmisinstalled () {
   # return value
 }
 
-pipisinstalled () {
+programisinstalled () {
   # set to 1 initially
   return=1
   # set to 0 if not found
-  type pip >/dev/null 2>&1 || { return=0; }
+  type $PROGRAM >/dev/null 2>&1 || { return=0; }
   # return value
 }
 
@@ -248,17 +248,38 @@ echo "7 - Exit script"
 read -p "Choice?" -n 1 -r
 echo
 if [[ $REPLY =~ ^[1]$ ]]; then
-	VER="canary"
-	VERCAP="Canary"
-	inststart
+	PROGRAM="wget"
+	programisinstalled
+	if [ "$return" = "1" ]; then
+		VER="canary"
+		VERCAP="Canary"
+		inststart
+	else
+		echo "$PROGRAM is not installed!"
+		exit 1
+	fi
 elif [[ $REPLY =~ ^[2]$ ]]; then
-	VER="ptb"
-	VERCAP="PTB"
-	inststart
+	PROGRAM="wget"
+	programisinstalled
+	if [ "$return" = "1" ]; then
+		VER="ptb"
+		VERCAP="PTB"
+		inststart
+	else
+		echo "$PROGRAM is not installed!"
+		exit 1
+	fi
 elif [[ $REPLY =~ ^[3]$ ]]; then
-	VER="stable"
-	VERCAP=""
-	inststart
+	PROGRAM="wget"
+	programisinstalled
+	if [ "$return" = "1" ]; then
+		VER="stable"
+		VERCAP=""
+		inststart
+	else
+		echo "$PROGRAM is not installed!"
+		exit 1
+	fi
 elif [[ $REPLY =~ ^[4]$ ]]; then
 	echo -n "Input the directory you would like to install BetterDiscord to and press [ENTER]:"
 	read DIR
@@ -271,7 +292,7 @@ elif [[ $REPLY =~ ^[4]$ ]]; then
 		DIR="${DIR::-1}"
 	fi
 	PROGRAM="npm"
-	PROGRAM2="nodejs"
+	PROGRAM2="wget"
 	PROGRAM3="unzip"
 	npmisinstalled
 	if [ "$return" = "1" ]; then
@@ -283,24 +304,25 @@ elif [[ $REPLY =~ ^[4]$ ]]; then
 				sudo rm -rf /tmp/bd
 				echo "Finished!"
 			else
-				echo "unzip not installed!"
+				echo "$PROGRAM3 not installed!"
 				exit 1
 			fi
 		else
-			echo "nodejs not installed!"
+			echo "$PROGRAM2 not installed!"
 			exit 1
 		fi
 	else
-		echo "npm not installed!"
+		echo "$PROGRAM not installed!"
 		exit 1
 	fi
 elif [[ $REPLY =~ ^[5]$ ]]; then
 	echo "Installing BeautifulDiscord..."
-	pipisinstalled
+	PROGRAM=pip
+	programisinstalled
 	if [ "$return" = "1" ]; then
 		beautifulinst
 	else
-		echo "pip is not installed!"
+		echo "$PROGRAM is not installed!"
 		exit 1
 	fi
 elif [[ $REPLY =~ ^[6]$ ]]; then

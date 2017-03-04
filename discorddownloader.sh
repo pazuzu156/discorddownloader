@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DDVER="1.3.1"
+DDVER="1.3.2"
 
 maininst () {
 	INSTDIR="$(< ~/.config/discorddownloader/"$VER"dir.conf)"
@@ -124,7 +124,7 @@ betterorbeautiful () {
 			exit 1
 		fi
 	elif [[ $REPLY =~ ^[2]$ ]]; then
-		pipisinstalled
+		programisinstalled
 		if [ "$return" = "1" ]; then
 			beautifulinst
 		else

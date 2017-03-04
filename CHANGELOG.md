@@ -7,6 +7,7 @@ layout: discorddownloader
 
 # Changelog
 
+* v1.3.2 - Fixed a few errors.
 * v1.3.1 - Added dependency checks for `wget` and removed check for `nodejs`; BetterDiscord install should work as long as `npm` is present.
 * v1.3.0 - 
 		* Fixed output of custom directory installs (was showing wrong directory to be removed before installing, but had no actual effect)

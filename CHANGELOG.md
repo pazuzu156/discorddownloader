@@ -1,1 +1,1 @@
-/home/simonizor/index/CHANGELOG.md
+[CHANGELOG](http://www.simonizor.gq/CHANGELOG)

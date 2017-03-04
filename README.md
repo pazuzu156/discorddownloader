@@ -1,1 +1,1 @@
-/home/simonizor/index/discorddownloader.md
+[README](http://www.simonizor.gq/discorddownloader)

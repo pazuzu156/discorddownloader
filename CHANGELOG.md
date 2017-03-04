@@ -7,6 +7,9 @@ layout: discorddownloader
 
 # Changelog
 
+* v1.3.0 - 
+		* Fixed output of custom directory installs (was showing wrong directory to be removed before installing, but had no actual effect)
+		* Fixed script to detect if chosen version is already installed, and clean up everything properly before reinstalling.
 * v1.2.9 - Added version number on first screen.
 * v1.2.8 - Added fix from [tape.sh](https://github.com/Ckath/Discord-stuff/blob/master/scripts/tape.sh) for bdstorage.json issue. The script no longer creates a symlink in the BetterDiscord directory.
 * v1.2.7 - Fixed output of install checks (thanks EastAPOLO)

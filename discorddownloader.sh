@@ -1,38 +1,59 @@
 #!/bin/bash
 
-DDVER="1.2.9"
+DDVER="1.3.0"
 
 maininst () {
-	echo "Installing Discord$VERCAP to" "$DIR" "..."
-	echo "Downloading Discord$VERCAP ..."
-	if [ "$VER" = "stable" ]; then
-		wget -O ~/Downloads/discord-linux.tar.gz "https://discordapp.com/api/download?platform=linux&format=tar.gz"
+	INSTDIR="$(< ~/.config/discorddownloader/"$VER"dir.conf)"
+	if [[ "$INSTDIR" == /* ]]; then
+		echo "Discord $VER is already installed.  Would you like to remove your previous install?"
+		echo "1 - Yes, update Discord $VER or install to a new directory."
+		echo "2 - No, leave my Discord $VER install alone."
+		read -p "Choice?" -n 1 -r
+		echo
+		if [[ $REPLY =~ ^[1]$ ]]; then
+			if [ "$VER" = "stable" ]; then
+				stableuninst
+				maininst
+			else
+				canaryptbuninst
+				maininst
+			fi
+		else
+			echo "Discord $VER was not installed and your previous install was untouched."
+			exit 1
+		fi
 	else
-		wget -O ~/Downloads/discord-linux.tar.gz "https://discordapp.com/api/download/$VER?platform=linux&format=tar.gz"
+		echo "Installing Discord$VERCAP to" "$DIR" "..."
+		echo "Downloading Discord$VERCAP ..."
+		if [ "$VER" = "stable" ]; then
+			wget -O ~/Downloads/discord-linux.tar.gz "https://discordapp.com/api/download?platform=linux&format=tar.gz"
+		else
+			wget -O ~/Downloads/discord-linux.tar.gz "https://discordapp.com/api/download/$VER?platform=linux&format=tar.gz"
+		fi
+		echo "Extracting Discord$VERCAP to ~/Downloads ..."
+		tar -xzvf ~/Downloads/discord-linux.tar.gz -C ~/Downloads/
+		echo "Removing existing install in $DIR if it exists ..."
+		sudo rm -r "$DIR"
+		echo "Moving ~/Downloads/Discord$VERCAP/ to" "$DIR" "..."
+		sudo mv ~/Downloads/Discord"$VERCAP"/ "$DIR"/
+		rm ~/Downloads/discord-linux.tar.gz
+		echo "Creating symbolic links for .desktop file ..."
+		if [ "$VER" = "stable" ]; then
+			sudo ln -s "$DIR"/discord.desktop /usr/share/applications/
+			sudo ln -s "$DIR"/discord.png /usr/share/icons/discord.png
+			sudo ln -s "$DIR"/Discord /usr/bin/Discord
+			sudo ln -s "$DIR" /usr/share/discord
+		else
+			sudo ln -s "$DIR"/discord-"$VER".desktop /usr/share/applications/
+			sudo ln -s "$DIR"/discord.png /usr/share/icons/discord-"$VER".png
+			sudo ln -s "$DIR"/Discord"$VERCAP" /usr/bin/Discord"$VERCAP"
+			sudo ln -s "$DIR" /usr/share/discord-"$VER"
+		fi
+		echo "Symbolic links have been created!"
+		echo "Creating config file for uninstall ..."
+		mkdir ~/.config/discorddownloader/
+		echo "$DIR" > ~/.config/discorddownloader/"$VER"dir.conf
 	fi
-	echo "Extracting Discord$VERCAP to ~/Downloads ..."
-	tar -xzvf ~/Downloads/discord-linux.tar.gz -C ~/Downloads/
-	echo "Removing existing install in /opt/Discord$VERCAP/ if it exists ..."
-	sudo rm -r "$DIR"
-	echo "Moving ~/Downloads/Discord$VERCAP/ to" "$DIR" "..."
-	sudo mv ~/Downloads/Discord"$VERCAP"/ "$DIR"/
-	rm ~/Downloads/discord-linux.tar.gz
-	echo "Creating symbolic links for .desktop file ..."
-	if [ "$VER" = "stable" ]; then
-		sudo ln -s "$DIR"/discord.desktop /usr/share/applications/
-		sudo ln -s "$DIR"/discord.png /usr/share/icons/discord.png
-		sudo ln -s "$DIR"/Discord /usr/bin/Discord
-		sudo ln -s "$DIR" /usr/share/discord
-	else
-		sudo ln -s "$DIR"/discord-"$VER".desktop /usr/share/applications/
-		sudo ln -s "$DIR"/discord.png /usr/share/icons/discord-"$VER".png
-		sudo ln -s "$DIR"/Discord"$VERCAP" /usr/bin/Discord"$VERCAP"
-		sudo ln -s "$DIR" /usr/share/discord-"$VER"
-	fi
-	echo "Symbolic links have been created!"
-	echo "Creating config file for uninstall ..."
-	mkdir ~/.config/discorddownloader/
-	echo "$DIR" > ~/.config/discorddownloader/"$VER"dir.conf
 }
 
 inststart () {

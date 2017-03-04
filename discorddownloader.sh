@@ -100,7 +100,7 @@ betterorbeautiful () {
 	echo
 	if [[ $REPLY =~ ^[1]$ ]]; then
 		PROGRAM="npm"
-		PROGRAM2="nodejs"
+		PROGRAM2="wget"
 		PROGRAM3="unzip"
 		npmisinstalled
 		if [ "$return" = "1" ]; then
@@ -112,15 +112,15 @@ betterorbeautiful () {
 					sudo rm -rf /tmp/bd
 					echo "Finished!"
 				else
-					echo "unzip not installed!"
+					echo "$PROGRAM3 not installed!"
 					exit 1
 				fi
 			else
-				echo "nodejs not installed!"
+				echo "$PROGRAM2 not installed!"
 				exit 1
 			fi
 		else
-			echo "nmp not installed!"
+			echo "$PROGRAM not installed!"
 			exit 1
 		fi
 	elif [[ $REPLY =~ ^[2]$ ]]; then

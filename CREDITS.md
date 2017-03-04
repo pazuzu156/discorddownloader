@@ -1,1 +1,1 @@
-/home/simonizor/index/CREDITS.md
+[CREDITS](http://www.simonizor.gq/CREDITS)

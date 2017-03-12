@@ -179,8 +179,8 @@ betterinst () {
 
 beautifulinst () {
 	python3 -m pip install -U https://github.com/leovoel/BeautifulDiscord/archive/master.zip
-	wget -O ~/.config/discorddownloader/arc-dark.css "https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/arc-dark.css"
-	echo "To use BeautifulDiscord, run Discord, and then execute 'beautifuldiscord --css ~/.config/discorddownloader/arc-dark.css'"
+	wget -O ~/.config/discorddownloader/ArcDarkAutohideMod.css "https://raw.githubusercontent.com/simoniz0r/DiscordThemes/master/ArcDarkMods/ArcDarkAutohideMod.theme.css"
+	echo "To use BeautifulDiscord, run Discord, and then execute 'beautifuldiscord --css ~/.config/discorddownloader/ArcDarkAutohideMod.css'"
 	echo "Finished!"
 }
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DDVER="1.3.2"
+DDVER="1.3.3"
 
 maininst () {
 	INSTDIR="$(< ~/.config/discorddownloader/"$VER"dir.conf)"

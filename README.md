@@ -53,7 +53,7 @@ permalink: /index.html
 	* If you install BetterDiscord, I recommend grabbing the [Even Better Repo](https://github.com/IRDeNial/BD-Even-Better-Repo) plugin.  It allows you to install plugins and themes through the Discord Settings menu.
 
 2. Install [BeautifulDiscord](https://github.com/leovoel/BeautifulDiscord) (requires python3.x, python3-pip)
-	* BeautifulDiscord will be installed and [sans' Arc-Dark theme](https://userstyles.org/styles/127986/discord-arc-dark) ([license](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode)) will be downloaded to `~/.config/discorddownloader/arc-dark.css`
+	* BeautifulDiscord will be installed and the [ArcDarkAutohideMod theme](https://raw.githubusercontent.com/simoniz0r/DiscordThemes/master/ArcDarkMods/ArcDarkAutohideMod.theme.css) will be downloaded to `~/.config/discorddownloader/ArcDarkAutohideMod.css`
 	* To use BeautifulDiscord, run Discord, and then execute `beautifuldiscord --css ~/.config/discorddownloader/arc-dark.css`
 	* BeautifulDiscord requires `psutil`; the script will take care of installing it for you.  If you have an older version of psutil on your system, you should remove it before running this script or update it yourself using `pyton3-pip`
 

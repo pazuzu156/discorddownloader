@@ -230,17 +230,28 @@ programisinstalled () {
   # return value
 }
 
+updatescript () {
+cat >~/Downloads/updatescript.sh <<'EOL'
+rm -f $SCRIPTNAME
+wget -O $SCRIPTNAME "https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/discorddownloader.sh"
+chmod +x $SCRIPTNAME
+rm -f ~/Downloads/updatescript.sh
+exec $SCRIPTNAME
+exit 0
+EOL
+}
+
 updatecheck () {
     echo "Checking for new version..."
-    UPNOTES=$(curl -v --silent https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/discorddownloader.sh 2>&1 | grep NEWFEATURES= | tr -d 'NEWFEATURES=""')
-    VERTEST=$(curl -v --silent https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/discorddownloader.sh 2>&1 | grep DDVER= | tr -d 'DDVER="')
+    UPNOTES=$(curl -v --silent https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/version.txt 2>&1 | grep NEWFEATURES= | tr -d 'NEWFEATURES="')
+    VERTEST=$(curl -v --silent https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/version.txt 2>&1 | grep DDVER= | tr -d 'DDVER="')
     if [[ $DDVER != $VERTEST ]]; then
         echo "A new version is available!"
-        echo "Update notes: $UPNOTES"
+        echo $UPNOTES
         read -p "Would you like to update? Y/N " -n 1 -r
         if [[ $REPLY =~ ^[Yy]$ ]]; then
             echo "Creating update script..."
-            echo "rm -f $SCRIPTNAME /n wget -o https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/discorddownloader.sh $SCRIPTNAME /n chmod +x $SCRIPTNAME /n rm -f ~/Downloads/updatescript.sh /n exec $SCRIPTNAME /n exit 0" > ~/Downloads/updatescript.sh
+            updatescript
             chmod +x ~/Downloads/updatescript.sh
             echo "Running update script..."
             exec ~/Downloads/updatescript.sh

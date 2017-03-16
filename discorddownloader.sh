@@ -1,6 +1,10 @@
 #!/bin/bash
+# discorddownloader by simonizor
+# http://www.simonizor.gq/discorddownloader
 
-DDVER="1.3.3"
+DDVER="1.3.4"
+SCRIPTNAME="$0"
+NEWFEATURES="v1.3.4 - Added a function to check for new versions and update script when new version is available."
 
 maininst () {
 	INSTDIR="$(< ~/.config/discorddownloader/"$VER"dir.conf)"
@@ -226,141 +230,168 @@ programisinstalled () {
   # return value
 }
 
+updatecheck () {
+    echo "Checking for new version..."
+    UPNOTES=$(curl -v --silent https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/discorddownloader.sh 2>&1 | grep NEWFEATURES= | tr -d 'NEWFEATURES=""')
+    VERTEST=$(curl -v --silent https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/discorddownloader.sh 2>&1 | grep DDVER= | tr -d 'DDVER="')
+    if [[ $DDVER != $VERTEST ]]; then
+        echo "A new version is available!"
+        echo "Update notes: $UPNOTES"
+        read -p "Would you like to update? Y/N " -n 1 -r
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            echo "Creating update script..."
+            echo "rm -f $SCRIPTNAME /n wget -o https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/discorddownloader.sh $SCRIPTNAME /n chmod +x $SCRIPTNAME /n rm -f ~/Downloads/updatescript.sh /n exec $SCRIPTNAME /n exit 0" > ~/Downloads/updatescript.sh
+            chmod +x ~/Downloads/updatescript.sh
+            echo "Running update script..."
+            exec ~/Downloads/updatescript.sh
+            exit 0
+        else
+            main
+        fi
+    else
+        echo "discorddownloader is up to date."
+        main
+    fi
+}
 
-echo "Welcome to discorddownloader v$DDVER."
-echo
-echo "Downloads, extracts, and creates symlinks for all versions of Discord."
-echo
-echo "Some of the commands involved in the install process will require root access."
-echo
-echo "Can also be used as an update tool or to install BeautifulDiscord or"
-echo "BetterDiscord to an existing  Discord install directory."
-echo
-echo "What would you like to do?"
-echo
-echo "1 - DiscordCanary (DiscordCanary requires libc++)"
-echo "2 - DiscordPTB"
-echo "3 - Discord Stable"
-echo "4 - Install BetterDiscord to existing Discord install (requires npm, nodejs, unzip)"
-echo "5 - Install BeautifulDiscord (requires python3.x, python3-pip, psutil)"
-echo "6 - Uninstall"
-echo "7 - Exit script"
-read -p "Choice?" -n 1 -r
-echo
-if [[ $REPLY =~ ^[1]$ ]]; then
-	PROGRAM="wget"
-	programisinstalled
-	if [ "$return" = "1" ]; then
-		VER="canary"
-		VERCAP="Canary"
-		inststart
-	else
-		echo "$PROGRAM is not installed!"
-		exit 1
-	fi
-elif [[ $REPLY =~ ^[2]$ ]]; then
-	PROGRAM="wget"
-	programisinstalled
-	if [ "$return" = "1" ]; then
-		VER="ptb"
-		VERCAP="PTB"
-		inststart
-	else
-		echo "$PROGRAM is not installed!"
-		exit 1
-	fi
-elif [[ $REPLY =~ ^[3]$ ]]; then
-	PROGRAM="wget"
-	programisinstalled
-	if [ "$return" = "1" ]; then
-		VER="stable"
-		VERCAP=""
-		inststart
-	else
-		echo "$PROGRAM is not installed!"
-		exit 1
-	fi
-elif [[ $REPLY =~ ^[4]$ ]]; then
-	echo -n "Input the directory you would like to install BetterDiscord to and press [ENTER]:"
-	read DIR
+main () {
+	echo "Welcome to discorddownloader v$DDVER."
 	echo
-	if [[ "$DIR" != /* ]]; then
-		echo "Invalid directory.  Exiting."
-		exit 1
-	fi
-	if [ "${DIR: -1}" = "/" ]; then
-		DIR="${DIR::-1}"
-	fi
-	PROGRAM="npm"
-	PROGRAM2="wget"
-	PROGRAM3="unzip"
-	npmisinstalled
-	if [ "$return" = "1" ]; then
-		if [ "$return2" = "1" ]; then
-			if [ "$return3" = "1" ]; then
-				betterinst
-				echo "Cleaning up..."
-				sudo rm /tmp/bd.zip
-				sudo rm -rf /tmp/bd
-				echo "Finished!"
-			else
-				echo "$PROGRAM3 not installed!"
-				exit 1
-			fi
-		else
-			echo "$PROGRAM2 not installed!"
-			exit 1
-		fi
-	else
-		echo "$PROGRAM not installed!"
-		exit 1
-	fi
-elif [[ $REPLY =~ ^[5]$ ]]; then
-	echo "Installing BeautifulDiscord..."
-	PROGRAM=pip
-	programisinstalled
-	if [ "$return" = "1" ]; then
-		beautifulinst
-	else
-		echo "$PROGRAM is not installed!"
-		exit 1
-	fi
-elif [[ $REPLY =~ ^[6]$ ]]; then
-	echo "Choose the version of Discord to uninstall..."
-	echo "1 - DiscordCanary"
+	echo "Downloads, extracts, and creates symlinks for all versions of Discord."
+	echo
+	echo "Some of the commands involved in the install process will require root access."
+	echo
+	echo "Can also be used as an update tool or to install BeautifulDiscord or"
+	echo "BetterDiscord to an existing  Discord install directory."
+	echo
+	echo "What would you like to do?"
+	echo
+	echo "1 - DiscordCanary (DiscordCanary requires libc++)"
 	echo "2 - DiscordPTB"
-	echo "3 - Discord"
-	echo "4 - I changed my mind"
+	echo "3 - Discord Stable"
+	echo "4 - Install BetterDiscord to existing Discord install (requires npm, nodejs, unzip)"
+	echo "5 - Install BeautifulDiscord (requires python3.x, python3-pip, psutil)"
+	echo "6 - Uninstall"
+	echo "7 - Exit script"
 	read -p "Choice?" -n 1 -r
 	echo
 	if [[ $REPLY =~ ^[1]$ ]]; then
-		INSTDIR="$(< ~/.config/discorddownloader/canarydir.conf)"
-		if [[ "$INSTDIR" == /* ]]; then
+		PROGRAM="wget"
+		programisinstalled
+		if [ "$return" = "1" ]; then
 			VER="canary"
 			VERCAP="Canary"
-			canaryptbuninst
+			inststart
 		else
-			echo "DiscordCanary has not been installed through this script!"
+			echo "$PROGRAM is not installed!"
+			exit 1
 		fi
 	elif [[ $REPLY =~ ^[2]$ ]]; then
-		INSTDIR="$(< ~/.config/discorddownloader/ptbdir.conf)"
-		if [[ "$INSTDIR" == /* ]]; then
+		PROGRAM="wget"
+		programisinstalled
+		if [ "$return" = "1" ]; then
 			VER="ptb"
 			VERCAP="PTB"
-			canaryptbuninst
+			inststart
 		else
-			echo "DiscordPTB has not been installed through this script!"
+			echo "$PROGRAM is not installed!"
+			exit 1
 		fi
 	elif [[ $REPLY =~ ^[3]$ ]]; then
-		INSTDIR="$(< ~/.config/discorddownloader/stabledir.conf)"
-		if [[ "$INSTDIR" == /* ]]; then
-			stableuninst
+		PROGRAM="wget"
+		programisinstalled
+		if [ "$return" = "1" ]; then
+			VER="stable"
+			VERCAP=""
+			inststart
 		else
-			echo "Discord Stable has not been installed thorugh this script!"
+			echo "$PROGRAM is not installed!"
+			exit 1
+		fi
+	elif [[ $REPLY =~ ^[4]$ ]]; then
+		echo -n "Input the directory you would like to install BetterDiscord to and press [ENTER]:"
+		read DIR
+		echo
+		if [[ "$DIR" != /* ]]; then
+			echo "Invalid directory.  Exiting."
+			exit 1
+		fi
+		if [ "${DIR: -1}" = "/" ]; then
+			DIR="${DIR::-1}"
+		fi
+		PROGRAM="npm"
+		PROGRAM2="wget"
+		PROGRAM3="unzip"
+		npmisinstalled
+		if [ "$return" = "1" ]; then
+			if [ "$return2" = "1" ]; then
+				if [ "$return3" = "1" ]; then
+					betterinst
+					echo "Cleaning up..."
+					sudo rm /tmp/bd.zip
+					sudo rm -rf /tmp/bd
+					echo "Finished!"
+				else
+					echo "$PROGRAM3 not installed!"
+					exit 1
+				fi
+			else
+				echo "$PROGRAM2 not installed!"
+				exit 1
+			fi
+		else
+			echo "$PROGRAM not installed!"
+			exit 1
+		fi
+	elif [[ $REPLY =~ ^[5]$ ]]; then
+		echo "Installing BeautifulDiscord..."
+		PROGRAM=pip
+		programisinstalled
+		if [ "$return" = "1" ]; then
+			beautifulinst
+		else
+			echo "$PROGRAM is not installed!"
+			exit 1
+		fi
+	elif [[ $REPLY =~ ^[6]$ ]]; then
+		echo "Choose the version of Discord to uninstall..."
+		echo "1 - DiscordCanary"
+		echo "2 - DiscordPTB"
+		echo "3 - Discord"
+		echo "4 - I changed my mind"
+		read -p "Choice?" -n 1 -r
+		echo
+		if [[ $REPLY =~ ^[1]$ ]]; then
+			INSTDIR="$(< ~/.config/discorddownloader/canarydir.conf)"
+			if [[ "$INSTDIR" == /* ]]; then
+				VER="canary"
+				VERCAP="Canary"
+				canaryptbuninst
+			else
+				echo "DiscordCanary has not been installed through this script!"
+			fi
+		elif [[ $REPLY =~ ^[2]$ ]]; then
+			INSTDIR="$(< ~/.config/discorddownloader/ptbdir.conf)"
+			if [[ "$INSTDIR" == /* ]]; then
+				VER="ptb"
+				VERCAP="PTB"
+				canaryptbuninst
+			else
+				echo "DiscordPTB has not been installed through this script!"
+			fi
+		elif [[ $REPLY =~ ^[3]$ ]]; then
+			INSTDIR="$(< ~/.config/discorddownloader/stabledir.conf)"
+			if [[ "$INSTDIR" == /* ]]; then
+				stableuninst
+			else
+				echo "Discord Stable has not been installed thorugh this script!"
+			fi
+		else
+			echo "Exiting."
 		fi
 	else
 		echo "Exiting."
 	fi
-else
-	echo "Exiting."
-fi
+}
+
+updatecheck

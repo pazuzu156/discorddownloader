@@ -1,2 +1,2 @@
-DDVER=1.3.4
-NEWFEATURES=v1.3.4 Added a function to check for new versions and update script when new version is available.
+=1.3.4
+==v1.3.4 Added a function to check for new versions and update script when new version is available.

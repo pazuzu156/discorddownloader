@@ -243,8 +243,8 @@ EOL
 
 updatecheck () {
     echo "Checking for new version..."
-    UPNOTES=$(curl -v --silent https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/version.txt 2>&1 | grep NEWFEATURES= | tr -d 'NEWFEATURES="')
-    VERTEST=$(curl -v --silent https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/version.txt 2>&1 | grep DDVER= | tr -d 'DDVER="')
+    UPNOTES=$(curl -v --silent https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/version.txt 2>&1 | grep ==)
+    VERTEST=$(curl -v --silent https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/version.txt 2>&1 | grep =)
     if [[ $DDVER != $VERTEST ]]; then
         echo "A new version is available!"
         echo $UPNOTES

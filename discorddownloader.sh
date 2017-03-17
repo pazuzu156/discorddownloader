@@ -2,8 +2,8 @@
 # discorddownloader by simonizor
 # http://www.simonizor.gq/discorddownloader
 
-DDVER="1.3.7"
-X="v1.3.7 - Changed directory of updatescript to /tmp to avoid conflicting with existing files."
+DDVER="1.3.8"
+X="v1.3.8 - Added check to make sure that update finished properly."
 # ^^ Remember to update these and version.txt every release!
 SCRIPTNAME="$0"
 
@@ -233,12 +233,26 @@ programisinstalled () {
 
 updatescript () {
 cat >/tmp/updatescript.sh <<EOL
-rm -f $SCRIPTNAME
-wget -O $SCRIPTNAME "https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/discorddownloader.sh"
-chmod +x $SCRIPTNAME
-rm -f /tmp/updatescript.sh
-exec $SCRIPTNAME
-exit 0
+runupdate () {
+    rm -f $SCRIPTNAME
+    wget -O $SCRIPTNAME "https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/discorddownloader.sh"
+    chmod +x $SCRIPTNAME
+    rm -f /tmp/updatescript.sh
+    if [ -f $SCRIPTNAME ]; then
+        echo "Update finished!"
+        exec $SCRIPTNAME
+        exit 0
+    else
+        read -p "Update Failed! Try again? Y/N " -n 1 -r
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            runupdate
+        else
+            echo "discorddownloader was not updated!"
+            exit 0
+        fi
+    fi
+}
+runupdate
 EOL
 }
 

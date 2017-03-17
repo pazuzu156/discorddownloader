@@ -247,7 +247,6 @@ updatecheck () {
     VERTEST=$(curl -v --silent https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/version.txt 2>&1 | grep DDVER= | tr -d 'DDVER=')
     if [[ $DDVER != $VERTEST ]]; then
         echo "A new version is available!"
-        echo $VERTEST
         echo $UPNOTES
         read -p "Would you like to update? Y/N " -n 1 -r
         if [[ $REPLY =~ ^[Yy]$ ]]; then

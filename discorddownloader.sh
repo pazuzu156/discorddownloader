@@ -231,8 +231,8 @@ programisinstalled () {
 }
 
 updatescript () {
-cat >~/Downloads/updatescript.sh <<'EOL'
-rm -f $SCRIPTNAME
+cat >~/Downloads/updatescript.sh <<EOL
+echo "rm -f $SCRIPTNAME"
 wget -O $SCRIPTNAME "https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/discorddownloader.sh"
 chmod +x $SCRIPTNAME
 rm -f ~/Downloads/updatescript.sh
@@ -243,10 +243,11 @@ EOL
 
 updatecheck () {
     echo "Checking for new version..."
-    UPNOTES=$(curl -v --silent https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/version.txt 2>&1 | grep ==)
-    VERTEST=$(curl -v --silent https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/version.txt 2>&1 | grep =)
+    UPNOTES=$(curl -v --silent https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/version.txt 2>&1 | grep X= | tr -d 'X=')
+    VERTEST=$(curl -v --silent https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/version.txt 2>&1 | grep DDVER= | tr -d 'DDVER=')
     if [[ $DDVER != $VERTEST ]]; then
         echo "A new version is available!"
+        echo $VERTEST
         echo $UPNOTES
         read -p "Would you like to update? Y/N " -n 1 -r
         if [[ $REPLY =~ ^[Yy]$ ]]; then

@@ -233,7 +233,7 @@ programisinstalled () {
 
 updatescript () {
 cat >~/Downloads/updatescript.sh <<EOL
-echo "rm -f $SCRIPTNAME"
+rm -f $SCRIPTNAME
 wget -O $SCRIPTNAME "https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/discorddownloader.sh"
 chmod +x $SCRIPTNAME
 rm -f ~/Downloads/updatescript.sh

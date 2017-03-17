@@ -2,9 +2,9 @@
 # discorddownloader by simonizor
 # http://www.simonizor.gq/discorddownloader
 
-DDVER="1.3.4"
+DDVER="1.3.5"
+NEWFEATURES="v1.3.5 Added dependency check for curl"
 SCRIPTNAME="$0"
-NEWFEATURES="v1.3.4 - Added a function to check for new versions and update script when new version is available."
 
 maininst () {
 	INSTDIR="$(< ~/.config/discorddownloader/"$VER"dir.conf)"
@@ -243,8 +243,8 @@ EOL
 
 updatecheck () {
     echo "Checking for new version..."
-    UPNOTES=$(curl -v --silent https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/version.txt 2>&1 | grep X= | tr -d 'X=')
-    VERTEST=$(curl -v --silent https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/version.txt 2>&1 | grep DDVER= | tr -d 'DDVER=')
+    UPNOTES=$(curl -v --silent https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/version.txt 2>&1 | grep X= | tr -d 'X="')
+    VERTEST=$(curl -v --silent https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/version.txt 2>&1 | grep DDVER= | tr -d 'DDVER="')
     if [[ $DDVER != $VERTEST ]]; then
         echo "A new version is available!"
         echo $UPNOTES
@@ -261,6 +261,7 @@ updatecheck () {
         fi
     else
         echo "discorddownloader is up to date."
+        echo
         main
     fi
 }
@@ -405,4 +406,11 @@ main () {
 	fi
 }
 
-updatecheck
+PROGRAM="curl"
+programisinstalled
+if [ "$return" = "1" ]; then
+    updatecheck
+else
+    echo "curl is not installed!"
+    exit 0
+fi

@@ -2,8 +2,8 @@
 # discorddownloader by simonizor
 # http://www.simonizor.gq/discorddownloader
 
-DDVER="1.3.8"
-X="v1.3.8 - Added check to make sure that update finished properly."
+DDVER="1.3.9"
+X="v1.3.9 - Moved rm -f /tmp/updatescript.sh to after successful check."
 # ^^ Remember to update these and version.txt every release!
 SCRIPTNAME="$0"
 
@@ -237,9 +237,9 @@ runupdate () {
     rm -f $SCRIPTNAME
     wget -O $SCRIPTNAME "https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/discorddownloader.sh"
     chmod +x $SCRIPTNAME
-    rm -f /tmp/updatescript.sh
     if [ -f $SCRIPTNAME ]; then
         echo "Update finished!"
+        rm -f /tmp/updatescript.sh
         exec $SCRIPTNAME
         exit 0
     else

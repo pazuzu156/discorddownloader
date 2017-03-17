@@ -2,8 +2,9 @@
 # discorddownloader by simonizor
 # http://www.simonizor.gq/discorddownloader
 
-DDVER="1.3.5"
-NEWFEATURES="v1.3.5 Added dependency check for curl"
+DDVER="1.3.6"
+X="v1.3.6 - Cleaned up update process and added option to skip if curl not installed."
+# ^^ Remember to update these and version.txt every release!
 SCRIPTNAME="$0"
 
 maininst () {
@@ -246,10 +247,12 @@ updatecheck () {
     UPNOTES=$(curl -v --silent https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/version.txt 2>&1 | grep X= | tr -d 'X="')
     VERTEST=$(curl -v --silent https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/version.txt 2>&1 | grep DDVER= | tr -d 'DDVER="')
     if [[ $DDVER != $VERTEST ]]; then
+        echo "Installed version: $DDVER -- Current version: $VERTEST"
         echo "A new version is available!"
         echo $UPNOTES
         read -p "Would you like to update? Y/N " -n 1 -r
         if [[ $REPLY =~ ^[Yy]$ ]]; then
+            echo
             echo "Creating update script..."
             updatescript
             chmod +x ~/Downloads/updatescript.sh
@@ -257,9 +260,11 @@ updatecheck () {
             exec ~/Downloads/updatescript.sh
             exit 0
         else
+            echo
             main
         fi
     else
+        echo "Installed version: $DDVER -- Current version: $VERTEST"
         echo "discorddownloader is up to date."
         echo
         main
@@ -267,7 +272,7 @@ updatecheck () {
 }
 
 main () {
-	echo "Welcome to discorddownloader v$DDVER."
+	echo "Welcome to discorddownloader."
 	echo
 	echo "Downloads, extracts, and creates symlinks for all versions of Discord."
 	echo
@@ -411,6 +416,13 @@ programisinstalled
 if [ "$return" = "1" ]; then
     updatecheck
 else
-    echo "curl is not installed!"
-    exit 0
+    read -p "curl is not installed; run script without checking for new version? Y/N " -n 1 -r
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        echo
+        main
+    else
+        echo
+        echo "Exiting."
+        exit 0
+    fi
 fi

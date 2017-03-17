@@ -2,8 +2,8 @@
 # discorddownloader by simonizor
 # http://www.simonizor.gq/discorddownloader
 
-DDVER="1.3.6"
-X="v1.3.6 - Cleaned up update process and added option to skip if curl not installed."
+DDVER="1.3.7"
+X="v1.3.7 - Changed directory of updatescript to /tmp to avoid conflicting with existing files."
 # ^^ Remember to update these and version.txt every release!
 SCRIPTNAME="$0"
 
@@ -232,11 +232,11 @@ programisinstalled () {
 }
 
 updatescript () {
-cat >~/Downloads/updatescript.sh <<EOL
+cat >/tmp/updatescript.sh <<EOL
 rm -f $SCRIPTNAME
 wget -O $SCRIPTNAME "https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/discorddownloader.sh"
 chmod +x $SCRIPTNAME
-rm -f ~/Downloads/updatescript.sh
+rm -f /tmp/updatescript.sh
 exec $SCRIPTNAME
 exit 0
 EOL
@@ -255,9 +255,9 @@ updatecheck () {
             echo
             echo "Creating update script..."
             updatescript
-            chmod +x ~/Downloads/updatescript.sh
+            chmod +x /tmp/updatescript.sh
             echo "Running update script..."
-            exec ~/Downloads/updatescript.sh
+            exec /tmp/updatescript.sh
             exit 0
         else
             echo

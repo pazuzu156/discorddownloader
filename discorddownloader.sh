@@ -2,8 +2,8 @@
 # discorddownloader by simonizor
 # http://www.simonizor.gq/discorddownloader
 
-DDVER="1.4.5"
-X="v1.4.5 - Fixed welcome message (oops)."
+DDVER="1.4.6"
+X="v1.4.6 - Cleaned up uninstall to remove script error if not installed through discorddownloader."
 # ^^ Remember to update these and version.txt every release!
 SCRIPTNAME="$0"
 
@@ -406,8 +406,8 @@ main () {
         read -p "Choice?" -n 1 -r
         echo
         if [[ $REPLY =~ ^[1]$ ]]; then
-            INSTDIR="$(< ~/.config/discorddownloader/canarydir.conf)"
-            if [[ "$INSTDIR" == /* ]]; then
+            if [ -f /.config/discorddownloader/canarydir.conf ]; then
+                INSTDIR="$(< ~/.config/discorddownloader/canarydir.conf)"
                 VER="canary"
                 VERCAP="Canary"
                 canaryptbuninst
@@ -415,8 +415,8 @@ main () {
                 echo "DiscordCanary has not been installed through this script!"
             fi
         elif [[ $REPLY =~ ^[2]$ ]]; then
-            INSTDIR="$(< ~/.config/discorddownloader/ptbdir.conf)"
-            if [[ "$INSTDIR" == /* ]]; then
+            if [ -f ~/.config/discorddownloader/ptbdir.conf ]; then
+                INSTDIR="$(< ~/.config/discorddownloader/ptbdir.conf)"
                 VER="ptb"
                 VERCAP="PTB"
                 canaryptbuninst
@@ -424,8 +424,8 @@ main () {
                 echo "DiscordPTB has not been installed through this script!"
             fi
         elif [[ $REPLY =~ ^[3]$ ]]; then
-            INSTDIR="$(< ~/.config/discorddownloader/stabledir.conf)"
-            if [[ "$INSTDIR" == /* ]]; then
+            if [ -f /.config/discorddownloader/stabledir.conf ]; then
+                INSTDIR="$(< ~/.config/discorddownloader/stabledir.conf)"
                 stableuninst
             else
                 echo "Discord Stable has not been installed thorugh this script!"

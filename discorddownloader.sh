@@ -2,8 +2,8 @@
 # discorddownloader by simonizor
 # http://www.simonizor.gq/discorddownloader
 
-DDVER="1.4.6"
-X="v1.4.6 - Cleaned up uninstall to remove script error if not installed through discorddownloader."
+DDVER="1.4.7"
+X="v1.4.7 - Fixed error in Discord Stable uninstall."
 # ^^ Remember to update these and version.txt every release!
 SCRIPTNAME="$0"
 
@@ -424,7 +424,7 @@ main () {
                 echo "DiscordPTB has not been installed through this script!"
             fi
         elif [[ $REPLY =~ ^[3]$ ]]; then
-            if [ -f /.config/discorddownloader/stabledir.conf ]; then
+            if [ -f ~/.config/discorddownloader/stabledir.conf ]; then
                 INSTDIR="$(< ~/.config/discorddownloader/stabledir.conf)"
                 stableuninst
             else

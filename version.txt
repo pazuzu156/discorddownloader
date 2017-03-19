@@ -1,2 +1,2 @@
-DDVER="1.4.6"
-X="v1.4.6 - Cleaned up uninstall to remove script error if not installed through discorddownloader."
+DDVER="1.4.7"
+X="v1.4.7 - Fixed error in Discord Stable uninstall."

@@ -2,20 +2,20 @@
 # discorddownloader by simonizor
 # http://www.simonizor.gq/discorddownloader
 
-DDVER="1.4.8"
-X="v1.4.8 - Added if statement to remove backslash if inputted in betterdiscordtest function."
+DDVER="1.4.9"
+X="v1.4.9 - Added check if Discord is installed to DIR, but not through discorddownloader and prompt to remove before installing."
 # ^^ Remember to update these and version.txt every release!
 SCRIPTNAME="$0"
 
 maininst () {
-    INSTDIR="$(< ~/.config/discorddownloader/"$VER"dir.conf)"
-    if [[ "$INSTDIR" == /* ]]; then
+    if [ -f ~/.config/discorddownloader/"$VER"dir.conf ]; then
         echo "Discord $VER is already installed.  Would you like to remove your previous install?"
         echo "1 - Yes, update Discord $VER or install to a new directory."
         echo "2 - No, leave my Discord $VER install alone."
         read -p "Choice?" -n 1 -r
         echo
         if [[ $REPLY =~ ^[1]$ ]]; then
+            INSTDIR="$(< ~/.config/discorddownloader/"$VER"dir.conf)"
             if [ "$VER" = "stable" ]; then
                 stableuninst
                 maininst
@@ -25,6 +25,22 @@ maininst () {
             fi
         else
             echo "Discord $VER was not installed and your previous install was untouched."
+            exit 1
+        fi
+    elif [ -f $DIR/content_shell.pak ]; then
+        read -p "Discord$VERCAP is already installed to $DIR; remove and continue with install? Y/N" -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]];then
+            INSTDIR="$DIR"
+            if [ "$VER" = "stable" ]; then
+                stableuninst
+                maininst
+            else
+                canaryptbuninst
+                maininst
+            fi
+        else
+            echo "Exiting."
             exit 1
         fi
     else
@@ -37,8 +53,6 @@ maininst () {
         fi
         echo "Extracting Discord$VERCAP to /tmp ..."
         tar -xzvf /tmp/discord-linux.tar.gz -C /tmp/
-        echo "Removing existing install in $DIR if it exists ..."
-        sudo rm -r "$DIR"
         echo "Moving /tmp/Discord$VERCAP/ to" "$DIR" "..."
         sudo mv /tmp/Discord"$VERCAP"/ "$DIR"/
         rm /tmp/discord-linux.tar.gz
@@ -225,10 +239,10 @@ beautifulinst () {
 canaryptbuninst () {
     echo "Uninstalling Discord$VERCAP from" "$INSTDIR" "..."
     sudo rm -r "$INSTDIR"/
-    rm ~/.config/discorddownloader/"$VER"dir.conf
     sudo rm /usr/share/applications/discord-"$VER".desktop
-    sudo rm /usr/share/icons/discord-"$VER".png
     sudo rm /usr/bin/Discord"$VERCAP"
+    rm ~/.config/discorddownloader/"$VER"dir.conf
+    sudo rm /usr/share/icons/discord-"$VER".png
     sudo rm /usr/share/discord-"$VER"
     echo "Discord$VERCAP has been uninstalled and symbolic links have been removed!"
 }
@@ -236,11 +250,11 @@ canaryptbuninst () {
 stableuninst () {
     echo "Uninstalling Discord Stable from" "$INSTDIR" "..."
     sudo rm -r "$INSTDIR"/
-    rm ~/.config/discorddownloader/stabledir.conf
     sudo rm /usr/share/applications/discord.desktop
-    sudo rm /usr/share/icons/discord.png
     sudo rm /usr/bin/Discord
+    rm ~/.config/discorddownloader/stabledir.conf
     sudo rm /usr/share/discord
+    sudo rm /usr/share/icons/discord.png
     echo "Discord has been uninstalled and symbolic links have been removed!"
 }
 
@@ -455,7 +469,7 @@ if [ "$return" = "1" ]; then
     echo
     updatecheck
 else
-    read -p "$PROGRAM is not installed; run script without checking for new version? Y/N " -n 1 -r
+    read -p "$PROGRAM is not installed; run discorddownloader without checking for new version? Y/N " -n 1 -r
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         echo
         echo "Welcome to discorddownloader."

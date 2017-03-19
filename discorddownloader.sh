@@ -2,8 +2,8 @@
 # discorddownloader by simonizor
 # http://www.simonizor.gq/discorddownloader
 
-DDVER="1.3.9"
-X="v1.3.9 - Moved rm -f /tmp/updatescript.sh to after successful check."
+DDVER="1.4.0"
+X="v1.4.0 - Changed a few places where script would exit to restart for convenience."
 # ^^ Remember to update these and version.txt every release!
 SCRIPTNAME="$0"
 
@@ -64,8 +64,8 @@ maininst () {
 inststart () {
 	echo "Where would you like to install Discord$VERCAP?"
 	echo "1 - Install to '/opt/Discord$VERCAP/'"
-	echo "2 - Install to custom directory"
-	echo "3 - Exit without installing"
+	echo "2 - Install to custom directory."
+	echo "3 - Return to main menu."
 	read -p "Choice?" -n 1 -r
 	echo
 	if [[ $REPLY =~ ^[1]$ ]]; then
@@ -78,8 +78,8 @@ inststart () {
 		read DIR
 		echo
 		if [[ "$DIR" != /* ]]; then
-			echo "Invalid directory.  Exiting."
-			exit 1
+			echo "Invalid directory.  Starting over."
+			inststart
 		fi
 		if [ "${DIR: -1}" = "/" ]; then
 			DIR="${DIR::-1}"
@@ -87,8 +87,8 @@ inststart () {
 		maininst
 		betterorbeautiful
 	elif [[ $REPLY =~ ^[3]$ ]]; then
-		echo "Discord$VERCAP was not installed!"
-		exit 1
+		echo "Returning to main menu..."
+		main
 	else
 		echo "Invalid choice."
 		inststart
@@ -344,8 +344,8 @@ main () {
 		read DIR
 		echo
 		if [[ "$DIR" != /* ]]; then
-			echo "Invalid directory.  Exiting."
-			exit 1
+			echo "Invalid directory.  Restarting."
+			main
 		fi
 		if [ "${DIR: -1}" = "/" ]; then
 			DIR="${DIR::-1}"
@@ -389,7 +389,7 @@ main () {
 		echo "1 - DiscordCanary"
 		echo "2 - DiscordPTB"
 		echo "3 - Discord"
-		echo "4 - I changed my mind"
+		echo "4 - Return to main menu."
 		read -p "Choice?" -n 1 -r
 		echo
 		if [[ $REPLY =~ ^[1]$ ]]; then
@@ -418,7 +418,7 @@ main () {
 				echo "Discord Stable has not been installed thorugh this script!"
 			fi
 		else
-			echo "Exiting."
+			main
 		fi
 	else
 		echo "Exiting."

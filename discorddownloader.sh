@@ -2,8 +2,8 @@
 # discorddownloader by simonizor
 # http://www.simonizor.gq/discorddownloader
 
-DDVER="1.4.0"
-X="v1.4.0 - Changed a few places where script would exit to restart for convenience."
+DDVER="1.4.1"
+X="v1.4.1 - Moved welcome message to be less annoying."
 # ^^ Remember to update these and version.txt every release!
 SCRIPTNAME="$0"
 
@@ -286,23 +286,13 @@ updatecheck () {
 }
 
 main () {
-	echo "Welcome to discorddownloader."
-	echo
-	echo "Downloads, extracts, and creates symlinks for all versions of Discord."
-	echo
-	echo "Some of the commands involved in the install process will require root access."
-	echo
-	echo "Can also be used as an update tool or to install BeautifulDiscord or"
-	echo "BetterDiscord to an existing  Discord install directory."
-	echo
 	echo "What would you like to do?"
-	echo
-	echo "1 - DiscordCanary (DiscordCanary requires libc++)"
-	echo "2 - DiscordPTB"
-	echo "3 - Discord Stable"
+	echo "1 - Install DiscordCanary (DiscordCanary requires libc++)"
+	echo "2 - Install DiscordPTB"
+	echo "3 - Install Discord Stable"
 	echo "4 - Install BetterDiscord to existing Discord install (requires npm, nodejs, unzip)"
 	echo "5 - Install BeautifulDiscord (requires python3.x, python3-pip, psutil)"
-	echo "6 - Uninstall"
+	echo "6 - Uninstall Discord"
 	echo "7 - Exit script"
 	read -p "Choice?" -n 1 -r
 	echo
@@ -428,10 +418,28 @@ main () {
 PROGRAM="curl"
 programisinstalled
 if [ "$return" = "1" ]; then
+    echo "Welcome to discorddownloader."
+    echo
+    echo "Downloads, extracts, and creates symlinks for all versions of Discord."
+    echo
+    echo "Some of the commands involved in the install process will require root access."
+    echo
+    echo "Can also be used as an update tool or to install BeautifulDiscord or"
+    echo "BetterDiscord to an existing  Discord install directory."
+    echo
     updatecheck
 else
-    read -p "curl is not installed; run script without checking for new version? Y/N " -n 1 -r
+    read -p "$PROGRAM is not installed; run script without checking for new version? Y/N " -n 1 -r
     if [[ $REPLY =~ ^[Yy]$ ]]; then
+        echo
+        echo "Welcome to discorddownloader."
+        echo
+        echo "Downloads, extracts, and creates symlinks for all versions of Discord."
+        echo
+        echo "Some of the commands involved in the install process will require root access."
+        echo
+        echo "Can also be used as an update tool or to install BeautifulDiscord or"
+        echo "BetterDiscord to an existing  Discord install directory."
         echo
         main
     else

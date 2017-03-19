@@ -2,8 +2,8 @@
 # discorddownloader by simonizor
 # http://www.simonizor.gq/discorddownloader
 
-DDVER="1.4.4"
-X="v1.4.4 - Changed tar.gz download directory to /tmp to avoid existing file conflicts."
+DDVER="1.4.5"
+X="v1.4.5 - Fixed welcome message (oops)."
 # ^^ Remember to update these and version.txt every release!
 SCRIPTNAME="$0"
 
@@ -443,7 +443,7 @@ programisinstalled
 if [ "$return" = "1" ]; then
     echo "Welcome to discorddownloader."
     echo
-    echo "tmp, extracts, and creates symlinks for all versions of Discord."
+    echo "Downloads, extracts, and creates symlinks for all versions of Discord."
     echo
     echo "Some of the commands involved in the install process will require root access."
     echo
@@ -457,7 +457,7 @@ else
         echo
         echo "Welcome to discorddownloader."
         echo
-        echo "tmp, extracts, and creates symlinks for all versions of Discord."
+        echo "Downloads, extracts, and creates symlinks for all versions of Discord."
         echo
         echo "Some of the commands involved in the install process will require root access."
         echo

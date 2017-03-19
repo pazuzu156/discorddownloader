@@ -1,2 +1,2 @@
-DDVER="1.4.4"
-X="v1.4.4 - Changed tar.gz download directory to /tmp to avoid existing file conflicts."
+DDVER="1.4.5"
+X="v1.4.5 - Fixed welcome message (oops)."

@@ -428,7 +428,7 @@ main () {
                 INSTDIR="$(< ~/.config/discorddownloader/stabledir.conf)"
                 stableuninst
             else
-                echo "Discord Stable has not been installed thorugh this script!"
+                echo "Discord Stable has not been installed through this script!"
             fi
         else
             main

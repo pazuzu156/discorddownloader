@@ -1,2 +1,2 @@
-DDVER="1.4.1"
-X="v1.4.1 - Moved welcome message to be less annoying."
+DDVER="1.4.2"
+X="v1.4.2 - Cleaned up directory checks so script doesn't repeat.  Added check to see if Discord is installed to DIR before installing BetterDiscord."

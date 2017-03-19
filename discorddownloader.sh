@@ -2,8 +2,8 @@
 # discorddownloader by simonizor
 # http://www.simonizor.gq/discorddownloader
 
-DDVER="1.4.1"
-X="v1.4.1 - Moved welcome message to be less annoying."
+DDVER="1.4.2"
+X="v1.4.2 - Cleaned up directory checks so script doesn't repeat.  Added check to see if Discord is installed to DIR before installing BetterDiscord."
 # ^^ Remember to update these and version.txt every release!
 SCRIPTNAME="$0"
 
@@ -61,6 +61,39 @@ maininst () {
 	fi
 }
 
+instdirtest () {
+    if [[ "$DIR" != /* ]]; then
+        echo "Invalid directory.  Try again."
+        echo -n "Input the directory you would like to install Discord$VERCAP to and press [ENTER]:"
+        read DIR
+        instdirtest
+    fi
+}
+
+betterdirtest () {
+    if [[ "$DIR" != /* ]]; then
+        echo "Invalid directory.  Try again."
+        echo -n "Input the directory you would like to install BetterDiscord to and press [ENTER]:"
+        read DIR
+        betterdirtest
+    fi
+}
+
+betterdiscordtest () {
+    if [ -f $DIR/content_shell.pak ]; then
+        betterinst
+        echo "Cleaning up..."
+        sudo rm /tmp/bd.zip
+        sudo rm -rf /tmp/bd
+        echo "Finished!"
+    else
+        echo "Discord is not installed to this directory; try again."
+        echo -n "Input the directory you would like to install BetterDiscord to and press [ENTER]:"
+        read DIR
+        betterdiscordtest
+    fi
+}
+
 inststart () {
 	echo "Where would you like to install Discord$VERCAP?"
 	echo "1 - Install to '/opt/Discord$VERCAP/'"
@@ -77,10 +110,7 @@ inststart () {
 		echo -n "Input the directory you would like to install Discord$VERCAP to and press [ENTER]:"
 		read DIR
 		echo
-		if [[ "$DIR" != /* ]]; then
-			echo "Invalid directory.  Starting over."
-			inststart
-		fi
+        instdirtest
 		if [ "${DIR: -1}" = "/" ]; then
 			DIR="${DIR::-1}"
 		fi
@@ -333,10 +363,7 @@ main () {
 		echo -n "Input the directory you would like to install BetterDiscord to and press [ENTER]:"
 		read DIR
 		echo
-		if [[ "$DIR" != /* ]]; then
-			echo "Invalid directory.  Restarting."
-			main
-		fi
+        betterdirtest
 		if [ "${DIR: -1}" = "/" ]; then
 			DIR="${DIR::-1}"
 		fi
@@ -347,11 +374,7 @@ main () {
 		if [ "$return" = "1" ]; then
 			if [ "$return2" = "1" ]; then
 				if [ "$return3" = "1" ]; then
-					betterinst
-					echo "Cleaning up..."
-					sudo rm /tmp/bd.zip
-					sudo rm -rf /tmp/bd
-					echo "Finished!"
+                    betterdiscordtest
 				else
 					echo "$PROGRAM3 not installed!"
 					exit 1

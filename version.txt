@@ -1,2 +1,2 @@
-DDVER="1.4.7"
-X="v1.4.7 - Fixed error in Discord Stable uninstall."
+DDVER="1.4.8"
+X="v1.4.8 - Added if statement to remove backslash if inputted in betterdiscordtest function."

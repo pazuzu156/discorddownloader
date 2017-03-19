@@ -2,8 +2,8 @@
 # discorddownloader by simonizor
 # http://www.simonizor.gq/discorddownloader
 
-DDVER="1.4.7"
-X="v1.4.7 - Fixed error in Discord Stable uninstall."
+DDVER="1.4.8"
+X="v1.4.8 - Added if statement to remove backslash if inputted in betterdiscordtest function."
 # ^^ Remember to update these and version.txt every release!
 SCRIPTNAME="$0"
 
@@ -81,6 +81,9 @@ betterdirtest () {
 
 betterdiscordtest () {
     if [ -f $DIR/content_shell.pak ]; then
+        if [ "${DIR: -1}" = "/" ]; then
+            DIR="${DIR::-1}"
+        fi
         betterinst
         echo "Cleaning up..."
         sudo rm /tmp/bd.zip

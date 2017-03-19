@@ -1,2 +1,2 @@
-DDVER="1.4.3"
-X="v1.4.3 - Cleaned up script in general (all spaces no tabs)."
+DDVER="1.4.4"
+X="v1.4.4 - Changed tar.gz download directory to /tmp to avoid existing file conflicts."

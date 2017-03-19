@@ -2,8 +2,8 @@
 # discorddownloader by simonizor
 # http://www.simonizor.gq/discorddownloader
 
-DDVER="1.4.3"
-X="v1.4.3 - Cleaned up script in general (all spaces no tabs)."
+DDVER="1.4.4"
+X="v1.4.4 - Changed tar.gz download directory to /tmp to avoid existing file conflicts."
 # ^^ Remember to update these and version.txt every release!
 SCRIPTNAME="$0"
 
@@ -31,17 +31,17 @@ maininst () {
         echo "Installing Discord$VERCAP to" "$DIR" "..."
         echo "Downloading Discord$VERCAP ..."
         if [ "$VER" = "stable" ]; then
-            wget -O ~/Downloads/discord-linux.tar.gz "https://discordapp.com/api/download?platform=linux&format=tar.gz"
+            wget -O /tmp/discord-linux.tar.gz "https://discordapp.com/api/download?platform=linux&format=tar.gz"
         else
-            wget -O ~/Downloads/discord-linux.tar.gz "https://discordapp.com/api/download/$VER?platform=linux&format=tar.gz"
+            wget -O /tmp/discord-linux.tar.gz "https://discordapp.com/api/download/$VER?platform=linux&format=tar.gz"
         fi
-        echo "Extracting Discord$VERCAP to ~/Downloads ..."
-        tar -xzvf ~/Downloads/discord-linux.tar.gz -C ~/Downloads/
+        echo "Extracting Discord$VERCAP to /tmp ..."
+        tar -xzvf /tmp/discord-linux.tar.gz -C /tmp/
         echo "Removing existing install in $DIR if it exists ..."
         sudo rm -r "$DIR"
-        echo "Moving ~/Downloads/Discord$VERCAP/ to" "$DIR" "..."
-        sudo mv ~/Downloads/Discord"$VERCAP"/ "$DIR"/
-        rm ~/Downloads/discord-linux.tar.gz
+        echo "Moving /tmp/Discord$VERCAP/ to" "$DIR" "..."
+        sudo mv /tmp/Discord"$VERCAP"/ "$DIR"/
+        rm /tmp/discord-linux.tar.gz
         echo "Creating symbolic links for .desktop file ..."
         if [ "$VER" = "stable" ]; then
             sudo ln -s "$DIR"/discord.desktop /usr/share/applications/
@@ -443,7 +443,7 @@ programisinstalled
 if [ "$return" = "1" ]; then
     echo "Welcome to discorddownloader."
     echo
-    echo "Downloads, extracts, and creates symlinks for all versions of Discord."
+    echo "tmp, extracts, and creates symlinks for all versions of Discord."
     echo
     echo "Some of the commands involved in the install process will require root access."
     echo
@@ -457,7 +457,7 @@ else
         echo
         echo "Welcome to discorddownloader."
         echo
-        echo "Downloads, extracts, and creates symlinks for all versions of Discord."
+        echo "tmp, extracts, and creates symlinks for all versions of Discord."
         echo
         echo "Some of the commands involved in the install process will require root access."
         echo

@@ -2,8 +2,8 @@
 # discorddownloader by simonizor
 # http://www.simonizor.gq/discorddownloader
 
-DDVER="1.5.2"
-X="v1.5.2 - Added check to make sure discorddownloader is not running as root."
+DDVER="1.5.3"
+X="v1.5.3 - Added checks to BetterDiscord install to see if asar is installed already, and if not, to see if it completes properly after install."
 # ^^ Remember to update these and version.txt every release!
 SCRIPTNAME="$0"
 
@@ -192,11 +192,12 @@ betterorbeautiful () {
             exit 1
         fi
     elif [[ $REPLY =~ ^[2]$ ]]; then
+        PROGRAM="pip"
         programisinstalled
         if [ "$return" = "1" ]; then
             beautifulinst
         else
-            echo "pip is not installed!"
+            echo "$PROGRAM is not installed!"
             exit 1
         fi
     elif [[ $REPLY =~ ^[3]$ ]]; then
@@ -215,8 +216,22 @@ betterinst () {
     killall -SIGKILL DiscordCanary
     killall -SIGKILL DiscordPTB
     
-    echo "Installing asar"
-    sudo npm install asar -g
+    PROGRAM="asar"
+    programisinstalled
+    if [ "$return" = "0" ]; then
+        echo "Installing asar..."
+        sudo npm install asar -g
+    else
+        echo "$PROGRAM is already installed; skipping..."
+    fi
+    programisinstalled
+    if [ "$return" = "0" ]; then
+        echo "Failed to install asar!"
+        echo "Exiting."
+        exit 1
+    else
+        echo "$PROGRAM 2nd check passed..."
+    fi
 
     echo "Downloading BetterDiscord..."
     wget -O /tmp/bd.zip https://github.com/Jiiks/BetterDiscordApp/archive/stable16.zip
@@ -425,7 +440,7 @@ main () {
         fi
     elif [[ $REPLY =~ ^[5]$ ]]; then
         echo "Installing BeautifulDiscord..."
-        PROGRAM=pip
+        PROGRAM="pip"
         programisinstalled
         if [ "$return" = "1" ]; then
             beautifulinst

@@ -1,2 +1,2 @@
-DDVER="1.5.1"
-X="v1.5.1 - Fixed error in Canary uninstall."
+DDVER="1.5.2"
+X="v1.5.2 - Added check to make sure discorddownloader is not running as root."

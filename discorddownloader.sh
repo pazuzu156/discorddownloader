@@ -2,8 +2,8 @@
 # discorddownloader by simonizor
 # http://www.simonizor.gq/discorddownloader
 
-DDVER="1.5.1"
-X="v1.5.1 - Fixed error in Canary uninstall."
+DDVER="1.5.2"
+X="v1.5.2 - Added check to make sure discorddownloader is not running as root."
 # ^^ Remember to update these and version.txt every release!
 SCRIPTNAME="$0"
 
@@ -524,23 +524,10 @@ main () {
     fi
 }
 
-PROGRAM="curl"
-programisinstalled
-if [ "$return" = "1" ]; then
-    echo "Welcome to discorddownloader."
-    echo
-    echo "Downloads, extracts, and creates symlinks for all versions of Discord."
-    echo
-    echo "Some of the commands involved in the install process will require root access."
-    echo
-    echo "Can also be used as an update tool or to install BeautifulDiscord or"
-    echo "BetterDiscord to an existing  Discord install directory."
-    echo
-    updatecheck
-else
-    read -p "$PROGRAM is not installed; run discorddownloader without checking for new version? Y/N " -n 1 -r
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        echo
+if [ "$EUID" -ne 0 ]; then
+    PROGRAM="curl"
+    programisinstalled
+    if [ "$return" = "1" ]; then
         echo "Welcome to discorddownloader."
         echo
         echo "Downloads, extracts, and creates symlinks for all versions of Discord."
@@ -550,10 +537,27 @@ else
         echo "Can also be used as an update tool or to install BeautifulDiscord or"
         echo "BetterDiscord to an existing  Discord install directory."
         echo
-        main
+        updatecheck
     else
-        echo
-        echo "Exiting."
-        exit 0
+        read -p "$PROGRAM is not installed; run discorddownloader without checking for new version? Y/N " -n 1 -r
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            echo
+            echo "Welcome to discorddownloader."
+            echo
+            echo "Downloads, extracts, and creates symlinks for all versions of Discord."
+            echo
+            echo "Some of the commands involved in the install process will require root access."
+            echo
+            echo "Can also be used as an update tool or to install BeautifulDiscord or"
+            echo "BetterDiscord to an existing  Discord install directory."
+            echo
+            main
+        else
+            echo
+            echo "Exiting."
+            exit 0
+        fi
     fi
+else
+    echo "Do not run discorddownloader as root!"
 fi

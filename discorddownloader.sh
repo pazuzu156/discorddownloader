@@ -2,8 +2,8 @@
 # discorddownloader by simonizor
 # http://www.simonizor.gq/discorddownloader
 
-DDVER="1.5.0"
-X="v1.5.0 - Will now return to main menu after uninstall process.  Also added ability to return to main menu after typing in wrong directories in custom installs and BetterDiscord custom install."
+DDVER="1.5.1"
+X="v1.5.1 - Fixed error in Canary uninstall."
 # ^^ Remember to update these and version.txt every release!
 SCRIPTNAME="$0"
 
@@ -442,7 +442,7 @@ main () {
         read -p "Choice?" -n 1 -r
         echo
         if [[ $REPLY =~ ^[1]$ ]]; then
-            if [ -f /.config/discorddownloader/canarydir.conf ]; then
+            if [ -f ~/.config/discorddownloader/canarydir.conf ]; then
                 INSTDIR="$(< ~/.config/discorddownloader/canarydir.conf)"
                 VER="canary"
                 VERCAP="Canary"

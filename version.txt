@@ -1,2 +1,2 @@
-DDVER="1.5.0"
-X="v1.5.0 - Will now return to main menu after uninstall process.  Also added ability to return to main menu after typing in wrong directories in custom installs and BetterDiscord custom install."
+DDVER="1.5.1"
+X="v1.5.1 - Fixed error in Canary uninstall."

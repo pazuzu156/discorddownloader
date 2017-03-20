@@ -2,8 +2,8 @@
 # discorddownloader by simonizor
 # http://www.simonizor.gq/discorddownloader
 
-DDVER="1.4.9"
-X="v1.4.9 - Added check if Discord is installed to DIR, but not through discorddownloader and prompt to remove before installing."
+DDVER="1.5.0"
+X="v1.5.0 - Will now return to main menu after uninstall process.  Also added ability to return to main menu after typing in wrong directories in custom installs and BetterDiscord custom install."
 # ^^ Remember to update these and version.txt every release!
 SCRIPTNAME="$0"
 
@@ -77,19 +77,29 @@ maininst () {
 
 instdirtest () {
     if [[ "$DIR" != /* ]]; then
-        echo "Invalid directory; try again."
-        echo -n "Input the directory you would like to install Discord$VERCAP to and press [ENTER]:"
-        read DIR
-        instdirtest
+        if [[ "$DIR" == "back" ]]; then
+            main
+            exit 0
+        else
+            echo "Invalid directory; try again or type 'back' to return to main menu."
+            echo -n "Input the directory you would like to install Discord$VERCAP to and press [ENTER]:"
+            read DIR
+            instdirtest
+        fi
     fi
 }
 
 betterdirtest () {
     if [[ "$DIR" != /* ]]; then
-        echo "Invalid directory; try again."
-        echo -n "Input the directory you would like to install BetterDiscord to and press [ENTER]:"
-        read DIR
-        betterdirtest
+        if [[ "$DIR" == "back" ]]; then
+            main
+            exit 0
+        else
+            echo "Directory must start with '/'; try again or type 'back' to return to main menu."
+            echo -n "Input the directory you would like to install BetterDiscord to and press [ENTER]:"
+            read DIR
+            betterdirtest
+        fi
     fi
 }
 
@@ -103,8 +113,11 @@ betterdiscordtest () {
         sudo rm /tmp/bd.zip
         sudo rm -rf /tmp/bd
         echo "Finished!"
+    elif [[ "$DIR" == "back" ]]; then
+        main
+        exit 0
     else
-        echo "Discord is not installed to this directory; try again."
+        echo "Discord is not installed to this directory; try again or type 'back' to return to main menu."
         echo -n "Input the directory you would like to install BetterDiscord to and press [ENTER]:"
         read DIR
         betterdiscordtest
@@ -136,9 +149,11 @@ inststart () {
     elif [[ $REPLY =~ ^[3]$ ]]; then
         echo "Returning to main menu..."
         main
+        exit 0
     else
         echo "Invalid choice."
         inststart
+        exit 0
     fi
 }
 
@@ -163,6 +178,7 @@ betterorbeautiful () {
                     sudo rm /tmp/bd.zip
                     sudo rm -rf /tmp/bd
                     echo "Finished!"
+                    exit 1
                 else
                     echo "$PROGRAM3 not installed!"
                     exit 1
@@ -185,6 +201,7 @@ betterorbeautiful () {
         fi
     elif [[ $REPLY =~ ^[3]$ ]]; then
         echo "Finished!"
+        exit 1
     else
         echo "Invalid choice."
         betterorbeautiful
@@ -227,6 +244,7 @@ betterinst () {
     sudo mv /tmp/bd "$DIR/resources/app/node_modules/betterdiscord"
     # mkdir ~/.config/BetterDiscord/
     # ln -s ~/.config/BetterDiscord/bdstorage.json ~/.config/BetterDiscord//bdStorage.json
+    exit 1
 }
 
 beautifulinst () {
@@ -234,6 +252,7 @@ beautifulinst () {
     wget -O ~/.config/discorddownloader/ArcDarkAutohideMod.css "https://raw.githubusercontent.com/simoniz0r/DiscordThemes/master/ArcDarkMods/ArcDarkAutohideMod.theme.css"
     echo "To use BeautifulDiscord, run Discord, and then execute 'beautifuldiscord --css ~/.config/discorddownloader/ArcDarkAutohideMod.css'"
     echo "Finished!"
+    exit 1
 }
 
 canaryptbuninst () {
@@ -427,28 +446,78 @@ main () {
                 INSTDIR="$(< ~/.config/discorddownloader/canarydir.conf)"
                 VER="canary"
                 VERCAP="Canary"
-                canaryptbuninst
+                read -p "Uninstall Discord$VERCAP? Y/N " -n 1 -r
+                if [[ $REPLY =~ ^[Yy]$ ]]; then
+                    echo
+                    canaryptbuninst
+                    echo
+                    main
+                    exit 0
+                else
+                    echo
+                    echo "Discord$VERCAP was not uninstalled."
+                    echo
+                    main
+                    exit 0
+                fi
             else
                 echo "DiscordCanary has not been installed through this script!"
+                echo
+                main
+                exit 0
             fi
         elif [[ $REPLY =~ ^[2]$ ]]; then
             if [ -f ~/.config/discorddownloader/ptbdir.conf ]; then
                 INSTDIR="$(< ~/.config/discorddownloader/ptbdir.conf)"
                 VER="ptb"
                 VERCAP="PTB"
-                canaryptbuninst
+                read -p "Uninstall Discord$VERCAP? Y/N " -n 1 -r
+                if [[ $REPLY =~ ^[Yy]$ ]]; then
+                    echo
+                    canaryptbuninst
+                    echo
+                    main
+                    exit 0
+                else
+                    echo
+                    echo "Discord$VERCAP was not uninstalled."
+                    echo
+                    main
+                    exit 0
+                fi
             else
                 echo "DiscordPTB has not been installed through this script!"
+                echo
+                main
+                exit 0
             fi
         elif [[ $REPLY =~ ^[3]$ ]]; then
             if [ -f ~/.config/discorddownloader/stabledir.conf ]; then
                 INSTDIR="$(< ~/.config/discorddownloader/stabledir.conf)"
-                stableuninst
+                read -p "Uninstall Discord? Y/N " -n 1 -r
+                if [[ $REPLY =~ ^[Yy]$ ]]; then
+                    echo
+                    stableuninst
+                    echo
+                    main
+                    exit 0
+                else
+                    echo
+                    echo "Discord was not uninstalled."
+                    echo
+                    main
+                    exit 0
+                fi
             else
                 echo "Discord Stable has not been installed through this script!"
+                echo
+                main
+                exit 0
             fi
         else
+            echo
             main
+            exit 0
         fi
     else
         echo "Exiting."

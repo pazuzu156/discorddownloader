@@ -2,12 +2,13 @@
 # discorddownloader by simonizor
 # http://www.simonizor.gq/discorddownloader
 
-DDVER="1.5.3"
-X="v1.5.3 - Added checks to BetterDiscord install to see if asar is installed already, and if not, to see if it completes properly after install."
+DDVER="1.5.4"
+X="v1.5.4 - Check if ~/.config/discorddownloader/ exists before creating directory for config files."
 # ^^ Remember to update these and version.txt every release!
 SCRIPTNAME="$0"
 
 maininst () {
+    CONFIGDIR=~/.config/discorddownloader/
     if [ -f ~/.config/discorddownloader/"$VER"dir.conf ]; then
         echo "Discord $VER is already installed.  Would you like to remove your previous install?"
         echo "1 - Yes, update Discord $VER or install to a new directory."
@@ -69,8 +70,12 @@ maininst () {
             sudo ln -s "$DIR" /usr/share/discord-"$VER"
         fi
         echo "Symbolic links have been created!"
+        if [ -d "$CONFIGDIR" ]; then
+            echo "$CONFIGDIR exists"
+        else
+            mkdir $CONFIGDIR
+        fi
         echo "Creating config file for uninstall ..."
-        mkdir ~/.config/discorddownloader/
         echo "$DIR" > ~/.config/discorddownloader/"$VER"dir.conf
     fi
 }

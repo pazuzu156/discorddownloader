@@ -1,2 +1,2 @@
-DDVER="1.6.0"
-X="v1.6.0 - Fixed permission errors when uninstalling after installing BetterDiscord."
+DDVER="1.6.1"
+X="v1.6.1 - Moved warning before BetterDiscord when using mydiscord so it actually displays."

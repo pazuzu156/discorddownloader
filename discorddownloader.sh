@@ -5,8 +5,8 @@
 # Dependencies: Required: 'wget', 'curl'; Optional: 'dialog' (discorddownloader GUI); 'nodejs', 'npm', 'zip' (BetterDiscord); 'python3.x', 'python3-pip', 'psutil' (mydiscord).
 # Description: A script that can install all versions of Discord. It can also install mydiscord and BetterDiscord. If you have 'dialog' installed, a GUI will automatically be shown.
 
-DDVER="1.6.0"
-X="v1.6.0 - Fixed permission errors when uninstalling after installing BetterDiscord."
+DDVER="1.6.1"
+X="v1.6.1 - Moved warning before BetterDiscord when using mydiscord so it actually displays."
 # ^^ Remember to update these and version.txt every release!
 SCRIPTNAME="$0"
 
@@ -486,14 +486,6 @@ mydiscordinst () {
 }
 
 betterinst () {
-    if [ -f ~/.config/discorddownloader/mydiscord.conf ]; then
-        read -p "mydiscord is installed; using BetterDiscord with mydiscord may cause issues.  Continue? Y/N" -n 1 -r
-        echo
-        if [[ $REPLY =~ ^[Nn]$ ]]; then
-            echo "BetterDiscord was not installed."
-            start
-        fi
-    fi
     echo "Installing BetterDiscord to" "$DIR" "..."
     echo "Closing any open Discord instances"
     killall -SIGKILL Discord
@@ -570,6 +562,14 @@ main () {
             mydiscordinst
             ;;
         3*)
+            if [ -f ~/.config/discorddownloader/mydiscord.conf ]; then
+                read -p "mydiscord is installed; using BetterDiscord with mydiscord may cause issues.  Continue? Y/N" -n 1 -r
+                echo
+                if [[ $REPLY =~ ^[Nn]$ ]]; then
+                    echo "BetterDiscord was not installed."
+                    start
+                fi
+            fi
             echo "BetterDiscord requires 'nodejs', 'npm', 'asar', and 'zip'; 'asar' will be installed for you if not already installed."
             read -p "Press ENTER to continue." NUL
             programisinstalled "npm"

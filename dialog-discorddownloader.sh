@@ -380,7 +380,8 @@ uninst () {
             sudo rm -f /usr/share/icons/discord-canary.png
             sudo rm -f /usr/bin/DiscordCanary
             sudo rm -f /usr/share/discord-canary
-            rm ~/.config/discorddownloader/canarydir.conf
+            rm -f ~/.config/discorddownloader/canarydir.conf
+            CANARYISINST="0"
             read -p "DiscordCanary has been uninstalled; press ENTER to return to main menu."
             start
             ;;
@@ -402,7 +403,8 @@ uninst () {
             sudo rm -f /usr/share/icons/discord-ptb.png
             sudo rm -f /usr/bin/DiscordPTB
             sudo rm -f /usr/share/discord-ptb
-            rm ~/.config/discorddownloader/ptbdir.conf
+            rm -f ~/.config/discorddownloader/ptbdir.conf
+            PTBISINST="0"
             read -p "DiscordPTB has been uninstalled; press ENTER to return to main menu."
             start
             ;;
@@ -424,7 +426,8 @@ uninst () {
             sudo rm -f /usr/share/icons/discord.png
             sudo rm -f /usr/bin/Discord
             sudo rm -f /usr/share/discord
-            rm ~/.config/discorddownloader/stabledir.conf
+            rm -f ~/.config/discorddownloader/stabledir.conf
+            STABLEISINST="0"
             read -p "Discord has been uninstalled; press ENTER to return to main menu."
             start
             ;;

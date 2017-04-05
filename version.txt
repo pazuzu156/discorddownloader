@@ -1,2 +1,2 @@
-DDVER="1.5.9"
-X="v1.5.9 - Script will not try to run 'mv' as sudo if Discord is installed to '/home/*'."
+DDVER="1.6.0"
+X="v1.6.0 - Fixed permission errors when uninstalling after installing BetterDiscord."

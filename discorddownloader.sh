@@ -105,7 +105,7 @@ updatecheck () {
 start () {
     programisinstalled "dialog"
     if [ "$return" = "1" ]; then
-        MAINCHOICE=$(dialog --stdout --backtitle discorddownloader --no-cancel --menu "Welcome to discorddownloader\nVersion v$DDVER\nWhat would you like to do?" 0 0 5 1 "Install Discord" 2 "Install mydiscord" 3 "Install BetterDiscord" 4 "Uninstall Discord" 5 Exit)
+        MAINCHOICE=$(dialog --stdout --backtitle discorddownloader --no-cancel --menu "Welcome to discorddownloader\nVersion $DDVER\nWhat would you like to do?" 0 0 5 1 "Install Discord" 2 "Install mydiscord" 3 "Install BetterDiscord" 4 "Uninstall Discord" 5 Exit)
         main "$MAINCHOICE"
         exit 0
     else

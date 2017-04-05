@@ -719,6 +719,7 @@ if [ "$EUID" -ne 0 ]; then
         fi
     else
         echo "wget is not installed!"
+        exit 0
     fi
 else
     echo "Do not run discorddownloader as root!"

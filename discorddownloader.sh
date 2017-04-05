@@ -5,8 +5,8 @@
 # Dependencies: Required: 'wget', 'curl'; Optional: 'dialog' (discorddownloader GUI); 'nodejs', 'npm', 'zip' (BetterDiscord); 'python3.x', 'python3-pip', 'psutil' (mydiscord).
 # Description: A script that can install all versions of Discord. It can also install mydiscord and BetterDiscord. If you have 'dialog' installed, a GUI will automatically be shown.
 
-DDVER="1.5.7"
-X="v1.5.7 - Check if 'curl' is installed before running updatecheck."
+DDVER="1.5.8"
+X="v1.5.8 - Warn about 'mydiscord' and 'BetterDiscord' dependencies before installing."
 # ^^ Remember to update these and version.txt every release!
 SCRIPTNAME="$0"
 
@@ -578,9 +578,13 @@ main () {
             fi
             ;;
         2*)
+            echo "mydiscord requires 'python3.x' and 'python3-pip'; 'psutil' will be installed for you."
+            read -p "Press ENTER to continue." NUL
             mydiscordinst
             ;;
         3*)
+            echo "BetterDiscord requires 'nodejs', 'npm', 'asar', and 'zip'; 'asar' will be installed for you if not already installed."
+            read -p "Press ENTER to continue." NUL
             programisinstalled "npm"
             if [ "$return" = "0" ]; then
                 echo "npm is not installed; cannot install BetterDiscord."

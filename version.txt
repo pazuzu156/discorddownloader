@@ -1,2 +1,2 @@
-DDVER="1.5.7"
-X="v1.5.7 - Check if 'curl' is installed before running updatecheck."
+DDVER="1.5.8"
+X="v1.5.8 - Warn about 'mydiscord' and 'BetterDiscord' dependencies before installing."

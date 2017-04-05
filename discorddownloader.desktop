@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Encoding=UTF-8
+Name=discorddownloader
+Comment=A bash script that installs Discord, mydiscord, and BetterDiscord.
+Exec=/usr/bin/discorddownloader
+Icon=/usr/share/icons/discorddownloader.png
+Terminal=true

@@ -1,20 +1,14 @@
 #!/bin/bash
-# discorddownloader by simonizor
-# http://www.simonizor.gq/discorddownloader
-# THINGS TO FINISH:
-# Install process that checks for existing installs in config file and through '$(readlink $(type Discord)), etc', create entry in config that gets ignored if only beautifuldiscord or BD are installed and not Discord
-# beautifuldiscord install (mostly done just need to add launch and add entries to config file if exists, create otherwise)
-# BetterDiscord install (launch, config file entries, and final touches)
-# Read config file to see if user has beautifuldiscord or BetterDiscord installed, and warn when installing the other about potential errors.
-# Uninstall process that reads config file to add options to list
-# Consolidate installs by making them into functions
-
+# Title: discorddownloader
+# Author: simonizor
+# URL: http://www.simonizor.gq/discorddownloader
+# Dependencies: Required: 'wget', 'curl'; Optional: 'dialog' (discorddownloader GUI); 'nodejs', 'npm', 'zip' (BetterDiscord); 'python3.x', 'python3-pip', 'psutil' (mydiscord).
+# Description: A script that can install all versions of Discord. It can also install mydiscord and BetterDiscord. If you have 'dialog' installed, a GUI will automatically be shown.
 
 DDVER="1.5.4"
 X="v1.5.4 - Check if ~/.config/discorddownloader/ exists before creating directory for config files."
 # ^^ Remember to update these and version.txt every release!
 SCRIPTNAME="$0"
-
 
 programisinstalled () {
     # set to 1 initially
@@ -125,6 +119,125 @@ start () {
         echo
         main "$REPLY"
     fi
+}
+
+startinst () {
+    case $1 in
+        DiscordCanary) # Canary
+            programisinstalled "dialog"
+            if [ "$return" = "1" ]; then
+                REPLY=$(dialog --stdout --menu "Where would you like to install DiscordCanary?" 0 0 2 1 "/opt/DiscordCanary" 2 "Use a custom directory")
+            else
+                echo "Where would you like to install DiscordCanary?"
+                echo "1 - /opt/DiscordCanary"
+                echo "2 - Use custom directory"
+                read -p "Choice?" -n 1 -r
+                echo
+            fi
+            case $REPLY in
+                1) # /opt
+                    DIR="/opt/DiscordCanary"
+                    canaryinst
+                    ;;
+                2) # Custom
+                    programisinstalled "dialog"
+                    if [ "$return" = "1" ]; then
+                        DIR=$(dialog --stdout --dselect ~/ 0 0)
+                    else
+                        read -p "Where would you like to install DiscordCanary? Ex: '/home/simonizor/DiscordCanary'" DIR
+                    fi
+                    if [[ "$DIR" != /* ]];then
+                        echo "Invalid directory format; use full directory path.  Ex: '/home/simonizor/DiscordCanary'"
+                        DIR=""
+                        main "DiscordCanary"
+                        exit 0
+                    fi
+                    if [ "${DIR: -1}" = "/" ]; then
+                        DIR="${DIR::-1}"
+                    fi
+                    canaryinst
+                    ;;
+                *)
+                    start
+            esac
+            ;;
+        DiscordPTB) # PTB
+            programisinstalled "dialog"
+            if [ "$return" = "1" ]; then
+                REPLY=$(dialog --stdout --menu "Where would you like to install DiscordPTB?" 0 0 2 1 "/opt/DiscordPTB" 2 "Use a custom directory")
+            else
+                echo "Where would you like to install DiscordPTB?"
+                echo "1 - /opt/DiscordPTB"
+                echo "2 - Use custom directory"
+                read -p "Choice?" -n 1 -r
+                echo
+            fi
+            case $REPLY in
+                1) # /opt
+                    DIR="/opt/DiscordPTB"
+                    ptbinst
+                    ;;
+                2) # Custom
+                    programisinstalled "dialog"
+                    if [ "$return" = "1" ]; then
+                        DIR=$(dialog --stdout --dselect ~/ 0 0)
+                    else
+                        read -p "Where would you like to install DiscordPTB? Ex: '/home/simonizor/DiscordPTB'" DIR
+                    fi
+                    if [[ "$DIR" != /* ]];then
+                        echo "Invalid directory format; use full directory path.  Ex: '/home/simonizor/DiscordPTB'"
+                        DIR=""
+                        main "DiscordPTB"
+                        exit 0
+                    fi
+                    if [ "${DIR: -1}" = "/" ]; then
+                        DIR="${DIR::-1}"
+                    fi
+                    ptbinst
+                    ;;
+                *)
+                    start
+            esac
+            ;;
+        Discord*) # Stable
+            programisinstalled "dialog"
+            if [ "$return" = "1" ]; then
+                REPLY=$(dialog --stdout --menu "Where would you like to install Discord?" 0 0 2 1 "/opt/Discord" 2 "Use a custom directory")
+            else
+                echo "Where would you like to install Discord?"
+                echo "1 - /opt/Discord"
+                echo "2 - Use custom directory"
+                read -p "Choice?" -n 1 -r
+                echo
+            fi
+            case $REPLY in
+                1) # /opt
+                    DIR="/opt/Discord"
+                    stableinst
+                    ;;
+                2) # Custom
+                    programisinstalled "dialog"
+                    if [ "$return" = "1" ]; then
+                        DIR=$(dialog --stdout --dselect ~/ 0 0)
+                    else
+                        read -p "Where would you like to install Discord? Ex: '/home/simonizor/Discord'" DIR
+                    fi
+                    if [[ "$DIR" != /* ]];then
+                        echo "Invalid directory format; use full directory path.  Ex: '/home/simonizor/Discord'"
+                        DIR=""
+                        main "Discord"
+                        exit 0
+                    fi
+                    if [ "${DIR: -1}" = "/" ]; then
+                        DIR="${DIR::-1}"
+                    fi
+                    stableinst
+                    ;;
+                *)
+                    start
+            esac
+            ;;
+    esac
 }
 
 canaryinst () {
@@ -409,7 +522,7 @@ main () {
             programisinstalled "dialog"
             if [ "$return" = "1" ]; then
                 VERCHOICE=$(dialog --stdout --menu "Install or update:" 0 0 3 DiscordCanary "" DiscordPTB "" "Discord Stable" "")
-                main "$VERCHOICE"
+                startinst "$VERCHOICE"
                 exit 0
             else
                 echo "DiscordCanary"
@@ -418,7 +531,7 @@ main () {
                 echo "Return to main menu"
                 read -p "Choice? " -r
                 echo
-                main "$REPLY"
+                startinst "$REPLY"
                 exit 0
             fi
             ;;
@@ -556,119 +669,8 @@ main () {
             echo "Exiting..."
             exit 0
             ;;
-        DiscordCanary) # Canary
-            programisinstalled "dialog"
-            if [ "$return" = "1" ]; then
-                REPLY=$(dialog --stdout --menu "Where would you like to install DiscordCanary?" 0 0 2 1 "/opt/DiscordCanary" 2 "Use a custom directory")
-            else
-                echo "Where would you like to install DiscordCanary?"
-                echo "1 - /opt/DiscordCanary"
-                echo "2 - Use custom directory"
-                read -p "Choice?" -n 1 -r
-                echo
-            fi
-            case $REPLY in
-                1) # /opt
-                    DIR="/opt/DiscordCanary"
-                    canaryinst
-                    ;;
-                2) # Custom
-                    programisinstalled "dialog"
-                    if [ "$return" = "1" ]; then
-                        DIR=$(dialog --stdout --dselect ~/ 0 0)
-                    else
-                        read -p "Where would you like to install DiscordCanary? Ex: '/home/simonizor/DiscordCanary'" DIR
-                    fi
-                    if [[ "$DIR" != /* ]];then
-                        echo "Invalid directory format; use full directory path.  Ex: '/home/simonizor/DiscordCanary'"
-                        DIR=""
-                        main "DiscordCanary"
-                        exit 0
-                    fi
-                    if [ "${DIR: -1}" = "/" ]; then
-                        DIR="${DIR::-1}"
-                    fi
-                    canaryinst
-                    ;;
-                *)
-                    start
-            esac
-            ;;
-        DiscordPTB) # PTB
-            programisinstalled "dialog"
-            if [ "$return" = "1" ]; then
-                REPLY=$(dialog --stdout --menu "Where would you like to install DiscordPTB?" 0 0 2 1 "/opt/DiscordPTB" 2 "Use a custom directory")
-            else
-                echo "Where would you like to install DiscordPTB?"
-                echo "1 - /opt/DiscordPTB"
-                echo "2 - Use custom directory"
-                read -p "Choice?" -n 1 -r
-                echo
-            fi
-            case $REPLY in
-                1) # /opt
-                    DIR="/opt/DiscordPTB"
-                    ptbinst
-                    ;;
-                2) # Custom
-                    programisinstalled "dialog"
-                    if [ "$return" = "1" ]; then
-                        DIR=$(dialog --stdout --dselect ~/ 0 0)
-                    else
-                        read -p "Where would you like to install DiscordPTB? Ex: '/home/simonizor/DiscordPTB'" DIR
-                    fi
-                    if [[ "$DIR" != /* ]];then
-                        echo "Invalid directory format; use full directory path.  Ex: '/home/simonizor/DiscordPTB'"
-                        DIR=""
-                        main "DiscordPTB"
-                        exit 0
-                    fi
-                    if [ "${DIR: -1}" = "/" ]; then
-                        DIR="${DIR::-1}"
-                    fi
-                    ptbinst
-                    ;;
-                *)
-                    start
-            esac
-            ;;
-        Discord*) # Stable
-            programisinstalled "dialog"
-            if [ "$return" = "1" ]; then
-                REPLY=$(dialog --stdout --menu "Where would you like to install Discord?" 0 0 2 1 "/opt/Discord" 2 "Use a custom directory")
-            else
-                echo "Where would you like to install Discord?"
-                echo "1 - /opt/Discord"
-                echo "2 - Use custom directory"
-                read -p "Choice?" -n 1 -r
-                echo
-            fi
-            case $REPLY in
-                1) # /opt
-                    DIR="/opt/Discord"
-                    stableinst
-                    ;;
-                2) # Custom
-                    programisinstalled "dialog"
-                    if [ "$return" = "1" ]; then
-                        DIR=$(dialog --stdout --dselect ~/ 0 0)
-                    else
-                        read -p "Where would you like to install Discord? Ex: '/home/simonizor/Discord'" DIR
-                    fi
-                    if [[ "$DIR" != /* ]];then
-                        echo "Invalid directory format; use full directory path.  Ex: '/home/simonizor/Discord'"
-                        DIR=""
-                        main "Discord"
-                        exit 0
-                    fi
-                    if [ "${DIR: -1}" = "/" ]; then
-                        DIR="${DIR::-1}"
-                    fi
-                    stableinst
-                    ;;
-                *)
-                    start
-            esac
+        R*)
+            start
             ;;
         *)
             echo "Exiting..."

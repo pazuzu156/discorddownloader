@@ -10,11 +10,11 @@ main () {
                 echo "discorddownloader was not installed."
                 exit 0
             fi
-            wget -O /tmp/discorddownloader https://raw.githubusercontent.com/simoniz0r/master/discorddownloader.sh
+            wget -O /tmp/discorddownloader https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/discorddownloader.sh
             if [ -f "/tmp/discorddownloader" ]; then
-                wget -O /tmp/discorddownloader.png https://raw.githubusercontent.com/simoniz0r/master/discorddownloader.png
+                wget -O /tmp/discorddownloader.png https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/discorddownloader.png
                 if [ -f "/tmp/discorddownloader.png" ]; then
-                    wget -O /tmp/discorddownloader.desktop https://raw.githubusercontent.com/simoniz0r/master/discorddownloader.desktop
+                    wget -O /tmp/discorddownloader.desktop https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/discorddownloader.desktop
                         if [ -f "/tmp/discorddownloader.desktop" ]; then
                             echo "Moving discorddownloader to /usr/bin/discorddownloader"
                             mv /tmp/discorddownloader /usr/bin/discorddownloader

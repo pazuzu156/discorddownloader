@@ -5,8 +5,8 @@
 # Dependencies: Required: 'wget', 'curl'; Optional: 'dialog' (discorddownloader GUI); 'nodejs', 'npm', 'zip' (BetterDiscord); 'python3.x', 'python3-pip', 'psutil' (mydiscord).
 # Description: A script that can install all versions of Discord. It can also install mydiscord and BetterDiscord. If you have 'dialog' installed, a GUI will automatically be shown.
 
-DDVER="1.5.6"
-X="v1.5.6 - Check conf file before installing Discord versions.  Fixed uninstall if existing install detected to run properly."
+DDVER="1.5.7"
+X="v1.5.7 - Check if 'curl' is installed before running updatecheck."
 # ^^ Remember to update these and version.txt every release!
 SCRIPTNAME="$0"
 
@@ -719,7 +719,13 @@ main () {
 if [ "$EUID" -ne 0 ]; then
     programisinstalled "wget"
     if [ "$return" = "1" ]; then
-        updatecheck
+        programisinstalled "curl"
+        if [ "$return" = "1" ]; then
+            updatecheck
+        else
+            read -p "curl is not installed; press ENTER to run discorddownloader without checking for updates!" NUL
+            start
+        fi
     else
         echo "wget is not installed!"
     fi

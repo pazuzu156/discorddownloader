@@ -1,2 +1,2 @@
-DDVER="1.5.6"
-X="v1.5.6 - Check conf file before installing Discord versions.  Fixed uninstall if existing install detected to run properly."
+DDVER="1.5.7"
+X="v1.5.7 - Check if 'curl' is installed before running updatecheck."

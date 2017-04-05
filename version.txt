@@ -1,2 +1,2 @@
-DDVER="1.5.4"
-X="v1.5.4 - Check if ~/.config/discorddownloader/ exists before creating directory for config files."
+DDVER="1.5.5"
+X="v1.5.5 - discorddownloader has been rewritten to use 'dialog' as a GUI and to clean up a few things.  Install 'dialog' to check out the new GUI!"

@@ -505,7 +505,7 @@ betterinst () {
         echo "Exiting."
         exit 1
     else
-        echo "$PROGRAM 2nd check passed..."
+        echo "asar 2nd check passed..."
     fi
 
     echo "Downloading BetterDiscord..."

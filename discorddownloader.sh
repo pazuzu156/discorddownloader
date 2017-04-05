@@ -5,8 +5,8 @@
 # Dependencies: Required: 'wget', 'curl'; Optional: 'dialog' (discorddownloader GUI); 'nodejs', 'npm', 'zip' (BetterDiscord); 'python3.x', 'python3-pip', 'psutil' (mydiscord).
 # Description: A script that can install all versions of Discord. It can also install mydiscord and BetterDiscord. If you have 'dialog' installed, a GUI will automatically be shown.
 
-DDVER="1.6.1"
-X="v1.6.1 - Moved warning before BetterDiscord when using mydiscord so it actually displays."
+DDVER="1.6.2"
+X="v1.6.2 - Add description of 'mydiscord' and 'BetterDiscord' before installing them."
 # ^^ Remember to update these and version.txt every release!
 SCRIPTNAME="$0"
 
@@ -466,14 +466,6 @@ uninst () {
 mydiscordinst () {
     programisinstalled "pip"
     if [ "$return" = "1" ]; then
-        if [ -f ~/.config/discorddownloader/BD.conf ]; then
-            read -p "BetterDiscord is installed; using mydiscord with BetterDiscord may cause issues.  Continue? Y/N" -n 1 -r
-            echo
-            if [[ $REPLY =~ ^[Nn]$ ]]; then
-                echo "mydiscord was not installed."
-                start
-            fi
-        fi
         python3 -m pip install -U https://github.com/justinoboyle/MyDiscord/archive/master.zip
         echo "Installed" > ~/.config/discorddownloader/mydiscord.conf 
         echo "To use 'mydiscord', first launch 'Discord' and then execute 'mydiscord' in a terminal."
@@ -557,6 +549,15 @@ main () {
             fi
             ;;
         2*)
+            if [ -f ~/.config/discorddownloader/BD.conf ]; then
+                read -p "BetterDiscord is installed; using mydiscord with BetterDiscord may cause issues.  Continue? Y/N" -n 1 -r
+                echo
+                if [[ $REPLY =~ ^[Nn]$ ]]; then
+                    echo "mydiscord was not installed."
+                    start
+                fi
+            fi
+            echo "mydiscord is a fork of beautifuldiscord that can hot-load CSS and JS."
             echo "mydiscord requires 'python3.x' and 'python3-pip'; 'psutil' will be installed for you."
             read -p "Press ENTER to continue." NUL
             mydiscordinst
@@ -570,6 +571,7 @@ main () {
                     start
                 fi
             fi
+            echo "BetterDiscord is a modification of the Discord client that allows CSS loading and JS plugins."
             echo "BetterDiscord requires 'nodejs', 'npm', 'asar', and 'zip'; 'asar' will be installed for you if not already installed."
             read -p "Press ENTER to continue." NUL
             programisinstalled "npm"

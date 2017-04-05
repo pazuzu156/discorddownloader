@@ -1,2 +1,2 @@
-DDVER="1.6.2"
-X="v1.6.2 - Add description of 'mydiscord' and 'BetterDiscord' before installing them."
+DDVER="1.6.3"
+X="v1.6.3 - Changed most echos to read -p so user can actually read output.  Also put in clears to get rid of some of the mess in terminal."

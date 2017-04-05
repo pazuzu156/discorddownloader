@@ -5,8 +5,8 @@
 # Dependencies: Required: 'wget', 'curl'; Optional: 'dialog' (discorddownloader GUI); 'nodejs', 'npm', 'zip' (BetterDiscord); 'python3.x', 'python3-pip', 'psutil' (mydiscord).
 # Description: A script that can install all versions of Discord. It can also install mydiscord and BetterDiscord. If you have 'dialog' installed, a GUI will automatically be shown.
 
-DDVER="1.6.2"
-X="v1.6.2 - Add description of 'mydiscord' and 'BetterDiscord' before installing them."
+DDVER="1.6.3"
+X="v1.6.3 - Changed most echos to read -p so user can actually read output.  Also put in clears to get rid of some of the mess in terminal."
 # ^^ Remember to update these and version.txt every release!
 SCRIPTNAME="$0"
 
@@ -90,6 +90,7 @@ updatecheck () {
         else
             echo
             read - p "discorddownloader not updated; press ENTER to continue." NUL
+            clear
             start
         fi
     else
@@ -98,6 +99,7 @@ updatecheck () {
         echo "discorddownloader is up to date."
         echo
         read -p "Press ENTER to continue." NUL
+        clear
         start
     fi
 }
@@ -118,6 +120,7 @@ start () {
         echo "5 - Exit script"
         read -p "Choice?" -n 1 -r
         echo
+        clear
         main "$REPLY"
     fi
 }
@@ -131,9 +134,11 @@ startinst () {
                 read -p "DiscordCanary is already installed; remove and proceed with install? Y/N " -n 1 -r
                 echo
                 if [[ $REPLY =~ ^[Yy]$ ]];then
+                    clear
                     uninst "1"
                 else
-                    echo "DiscordCanary was not installed."
+                    read -p "DiscordCanary was not installed; press ENTER to continue." NUL
+                    clear
                     start
                 fi
             fi
@@ -150,6 +155,7 @@ startinst () {
             case $REPLY in
                 1) # /opt
                     DIR="/opt/DiscordCanary"
+                    clear
                     canaryinst
                     ;;
                 2) # Custom
@@ -161,6 +167,8 @@ startinst () {
                     fi
                     if [[ "$DIR" != /* ]];then
                         echo "Invalid directory format; use full directory path.  Ex: '/home/simonizor/DiscordCanary'"
+                        read -p "Press ENTER to continue." NUL
+                        clear
                         DIR=""
                         startinst "1"
                         exit 0
@@ -168,9 +176,11 @@ startinst () {
                     if [ "${DIR: -1}" = "/" ]; then
                         DIR="${DIR::-1}"
                     fi
+                    clear
                     canaryinst
                     ;;
                 *)
+                    clear
                     start
             esac
             ;;
@@ -181,9 +191,11 @@ startinst () {
                 read -p "DiscordPTB is already installed; remove and proceed with install? Y/N " -n 1 -r
                 echo
                 if [[ $REPLY =~ ^[Yy]$ ]];then
+                    clear
                     uninst "2"
                 else
                     echo "DiscordPTB was not installed."
+                    clear
                     start
                 fi
             fi
@@ -200,6 +212,7 @@ startinst () {
             case $REPLY in
                 1) # /opt
                     DIR="/opt/DiscordPTB"
+                    clear
                     ptbinst
                     ;;
                 2) # Custom
@@ -211,6 +224,8 @@ startinst () {
                     fi
                     if [[ "$DIR" != /* ]];then
                         echo "Invalid directory format; use full directory path.  Ex: '/home/simonizor/DiscordPTB'"
+                        read -p "Press ENTER to continue." NUL
+                        clear
                         DIR=""
                         startinst "2"
                         exit 0
@@ -218,9 +233,11 @@ startinst () {
                     if [ "${DIR: -1}" = "/" ]; then
                         DIR="${DIR::-1}"
                     fi
+                    clear
                     ptbinst
                     ;;
                 *)
+                    clear
                     start
             esac
             ;;
@@ -231,9 +248,11 @@ startinst () {
                 read -p "Discord is already installed; remove and proceed with install? Y/N " -n 1 -r
                 echo
                 if [[ $REPLY =~ ^[Yy]$ ]];then
+                    clear
                     uninst "3"
                 else
-                    echo "Discord was not installed."
+                    read -p "Discord was not installed; press ENTER to continue." NUL
+                    clear
                     start
                 fi
             fi
@@ -250,6 +269,7 @@ startinst () {
             case $REPLY in
                 1) # /opt
                     DIR="/opt/Discord"
+                    clear
                     stableinst
                     ;;
                 2) # Custom
@@ -261,6 +281,8 @@ startinst () {
                     fi
                     if [[ "$DIR" != /* ]];then
                         echo "Invalid directory format; use full directory path.  Ex: '/home/simonizor/Discord'"
+                        read -p "Press ENTER to continue." NUL
+                        clear
                         DIR=""
                         startinst "3"
                         exit 0
@@ -268,13 +290,16 @@ startinst () {
                     if [ "${DIR: -1}" = "/" ]; then
                         DIR="${DIR::-1}"
                     fi
+                    clear
                     stableinst
                     ;;
                 *)
+                    clear
                     start
             esac
             ;;
         *)
+            clear
             start
     esac
 }
@@ -285,15 +310,18 @@ canaryinst () {
         echo
         if [[ $REPLY =~ ^[Yy]$ ]];then
             CANARYINSTDIR="$DIR"
+            clear
             uninst "1"
         else
-            echo "DiscordCanary was not installed."
+            read -p "DiscordCanary was not installed; press ENTER to continue." NUL
+            clear
             start
         fi
     fi
     wget -O /tmp/discord-linux.tar.gz "https://discordapp.com/api/download/canary?platform=linux&format=tar.gz"
     if [ ! -f /tmp/discord-linux.tar.gz ]; then
-        echo "Download failed; try again later!"
+        read -p "Download failed; try again later! Press ENTER to continue."
+        clear
         start
     fi
     echo "Extracting DiscordCanary to /tmp ..."
@@ -316,6 +344,7 @@ canaryinst () {
     fi
     echo "$DIR" > ~/.config/discorddownloader/canarydir.conf
     read -p "DiscordCanary has been installed; press ENTER to return to main menu." NUL
+    clear
     start
 }
 
@@ -325,15 +354,18 @@ ptbinst () {
         echo
         if [[ $REPLY =~ ^[Yy]$ ]];then
             PTBINSTDIR="$DIR"
+            clear
             uninst "2"
         else
-            echo "DiscordPTB was not installed."
+            read -p "DiscordPTB was not installed; press ENTER to continue." NUL
+            clear
             start
         fi
     fi
     wget -O /tmp/discord-linux.tar.gz "https://discordapp.com/api/download/ptb?platform=linux&format=tar.gz"
     if [ ! -f /tmp/discord-linux.tar.gz ]; then
-        echo "Download failed; try again later!"
+        read -p "Download failed; try again later! Press ENTER to continue." NUL
+        clear
         start
     fi
     echo "Extracting DiscordPTB to /tmp ..."
@@ -356,6 +388,7 @@ ptbinst () {
     fi
     echo "$DIR" > ~/.config/discorddownloader/ptbdir.conf
     read -p "DiscordPTB has been installed; press ENTER to return to main menu." NUL
+    clear
     start
 }
 
@@ -365,15 +398,18 @@ stableinst () {
         echo
         if [[ $REPLY =~ ^[Yy]$ ]];then
             STABLEINSTDIR="$DIR"
+            clear
             uninst "3"
         else
-            echo "Discord was not installed."
+            read -p "Discord was not installed; press ENTER to continue." NUL
+            clear
             start
         fi
     fi
     wget -O /tmp/discord-linux.tar.gz "https://discordapp.com/api/download?platform=linux&format=tar.gz"
     if [ ! -f /tmp/discord-linux.tar.gz ]; then
-        echo "Download failed; try again later!"
+        read -p "Download failed; try again later! Press ENTER to continue." NUL
+        clear
         start
     fi
     echo "Extracting Discord to /tmp ..."
@@ -396,6 +432,7 @@ stableinst () {
     fi
     echo "$DIR" > ~/.config/discorddownloader/stabledir.conf
     read -p "Discord has been installed; press ENTER to return to main menu." NUL
+    clear
     start
 }
 
@@ -405,7 +442,8 @@ uninst () {
             read -p "Are you sure you want to uninstall DiscordCanary? Y/N" -n 1 -r
             echo
             if [[ $REPLY =~ ^[Nn]$ ]]; then
-                echo "DiscordCanary was not uninstalled"
+                read -p "DiscordCanary was not uninstalled; press ENTER to continue." NUL
+                clear
                 start
             fi
             echo "Removing install directory..."
@@ -418,13 +456,15 @@ uninst () {
             rm -f ~/.config/discorddownloader/canarydir.conf
             CANARYISINST="0"
             read -p "DiscordCanary has been uninstalled; press ENTER to return to main menu."
+            clear
             start
             ;;
         2*)
             read -p "Are you sure you want to uninstall DiscordPTB? Y/N" -n 1 -r
             echo
             if [[ $REPLY =~ ^[Nn]$ ]]; then
-                echo "DiscordPTB was not uninstalled"
+                read -p "DiscordPTB was not uninstalled; press ENTER to continue." NUL
+                clear
                 start
             fi
             echo "Removing install directory..."
@@ -437,13 +477,15 @@ uninst () {
             rm -f ~/.config/discorddownloader/ptbdir.conf
             PTBISINST="0"
             read -p "DiscordPTB has been uninstalled; press ENTER to return to main menu."
+            clear
             start
             ;;
         3*)
             read -p "Are you sure you want to uninstall Discord? Y/N" -n 1 -r
             echo
             if [[ $REPLY =~ ^[Nn]$ ]]; then
-                echo "DiscordPTB was not uninstalled"
+                read -p "DiscordPTB was not uninstalled; press ENTER to continue." NUL
+                clear
                 start
             fi
             echo "Removing install directory..."
@@ -456,9 +498,11 @@ uninst () {
             rm -f ~/.config/discorddownloader/stabledir.conf
             STABLEISINST="0"
             read -p "Discord has been uninstalled; press ENTER to return to main menu."
+            clear
             start
             ;;
         *)
+            clear
             start
     esac
 }
@@ -472,8 +516,9 @@ mydiscordinst () {
         read -p "mydiscord install finished; press ENTER to return to main menu." NUL
         start
     else
-        echo "python3-pip is not installed!"
-        exit 0
+        read -p "python3-pip is not installed; press ENTER to return to main menu."
+        clear
+        start
     fi
 }
 
@@ -535,8 +580,8 @@ main () {
             programisinstalled "dialog"
             if [ "$return" = "1" ]; then
                 VERCHOICE=$(dialog --stdout --backtitle "discorddownloader - Install Discord" --menu "Install or update:" 0 0 3 1 DiscordCanary 2 DiscordPTB 3 "Discord Stable")
+                clear
                 startinst "$VERCHOICE"
-                exit 0
             else
                 echo "1 - DiscordCanary"
                 echo "2 - DiscordPTB"
@@ -544,8 +589,8 @@ main () {
                 echo "Return to main menu"
                 read -p "Choice? " -n 1 -r
                 echo
+                clear
                 startinst "$REPLY"
-                exit 0
             fi
             ;;
         2*)
@@ -553,13 +598,15 @@ main () {
                 read -p "BetterDiscord is installed; using mydiscord with BetterDiscord may cause issues.  Continue? Y/N" -n 1 -r
                 echo
                 if [[ $REPLY =~ ^[Nn]$ ]]; then
-                    echo "mydiscord was not installed."
+                    read -p "mydiscord was not installed; press ENTER to continue." NUL
+                    clear
                     start
                 fi
             fi
             echo "mydiscord is a fork of beautifuldiscord that can hot-load CSS and JS."
             echo "mydiscord requires 'python3.x' and 'python3-pip'; 'psutil' will be installed for you."
             read -p "Press ENTER to continue." NUL
+            clear
             mydiscordinst
             ;;
         3*)
@@ -567,7 +614,8 @@ main () {
                 read -p "mydiscord is installed; using BetterDiscord with mydiscord may cause issues.  Continue? Y/N" -n 1 -r
                 echo
                 if [[ $REPLY =~ ^[Nn]$ ]]; then
-                    echo "BetterDiscord was not installed."
+                    read -p "BetterDiscord was not installed; press ENTER to continue."
+                    clear
                     start
                 fi
             fi
@@ -576,13 +624,15 @@ main () {
             read -p "Press ENTER to continue." NUL
             programisinstalled "npm"
             if [ "$return" = "0" ]; then
-                echo "npm is not installed; cannot install BetterDiscord."
-                exit 0
+                read -p "npm is not installed; cannot install BetterDiscord. Press ENTER to return to main menu." NUL
+                clear
+                start
             fi
             programisinstalled "zip"
             if [ "$return" = "0" ]; then
-                echo "zip is not installed; cannot install BetterDiscord."
-                exit 0
+                read -p "zip is not installed; cannot install BetterDiscord. Press ENTER to return to main menu." NUL
+                clear
+                start
             fi
             programisinstalled "dialog"
             if [ "$return" = "1" ]; then
@@ -592,6 +642,8 @@ main () {
             fi
             if [[ "$DIR" != /* ]]; then
                 echo "Invalid directory format; use full directory path.  Ex: '/home/simonizor/DiscordCanary'"
+                read -p "Presss ENTER to return to main menu." NUL
+                clear
                 DIR=""
                 start
             fi
@@ -600,6 +652,7 @@ main () {
             fi
             if [ ! -f "$DIR/content_shell.pak" ]; then
                 read -p "Discord is not installed to this directory; press ENTER to return to main menu." NUL
+                clear
                 start
             fi
             echo "$DIR"
@@ -695,15 +748,19 @@ main () {
                 fi
             else
                 read -p "No versions of Discord are installed; press ENTER to return to main menu" NUL
+                clear
                 start
             fi
+            clear
             uninst "$REPLY"
             ;;
         5)
+            clear
             echo "Exiting..."
             exit 0
             ;;
         *)
+            clear
             start
             ;;
     esac

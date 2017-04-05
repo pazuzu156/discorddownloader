@@ -5,8 +5,8 @@
 # Dependencies: Required: 'wget', 'curl'; Optional: 'dialog' (discorddownloader GUI); 'nodejs', 'npm', 'zip' (BetterDiscord); 'python3.x', 'python3-pip', 'psutil' (mydiscord).
 # Description: A script that can install all versions of Discord. It can also install mydiscord and BetterDiscord. If you have 'dialog' installed, a GUI will automatically be shown.
 
-DDVER="1.5.8"
-X="v1.5.8 - Warn about 'mydiscord' and 'BetterDiscord' dependencies before installing."
+DDVER="1.5.9"
+X="v1.5.9 - Script will not try to run 'mv' as sudo if Discord is installed to '/home/*'."
 # ^^ Remember to update these and version.txt every release!
 SCRIPTNAME="$0"
 
@@ -299,7 +299,7 @@ canaryinst () {
     echo "Extracting DiscordCanary to /tmp ..."
     tar -xzvf /tmp/discord-linux.tar.gz -C /tmp/
     echo "Moving /tmp/DiscordCanary/ to" "$DIR ..."
-    if [[ "$DIR" != "/home/*" ]]; then
+    if [[ "$DIR" != /home/* ]]; then
         sudo mv /tmp/DiscordCanary/ $DIR/
     else
         mv /tmp/DiscordCanary/ $DIR/
@@ -339,7 +339,7 @@ ptbinst () {
     echo "Extracting DiscordPTB to /tmp ..."
     tar -xzvf /tmp/discord-linux.tar.gz -C /tmp/
     echo "Moving /tmp/DiscordPTB/ to" "$DIR ..."
-    if [[ "$DIR" != "/home/*" ]]; then
+    if [[ "$DIR" != /home/* ]]; then
         sudo mv /tmp/DiscordPTB/ $DIR/
     else
         mv /tmp/DiscordPTB/ $DIR/
@@ -379,7 +379,7 @@ stableinst () {
     echo "Extracting Discord to /tmp ..."
     tar -xzvf /tmp/discord-linux.tar.gz -C /tmp/
     echo "Moving /tmp/Discord/ to" "$DIR ..."
-    if [[ "$DIR" != "/home/*" ]]; then
+    if [[ "$DIR" != /home/* ]]; then
         sudo mv /tmp/Discord/ $DIR/
     else
         mv /tmp/Discord/ $DIR/
@@ -409,7 +409,7 @@ uninst () {
                 start
             fi
             echo "Removing install directory..."
-            if [[ "$CANARYINSTDIR" != "/home/*" ]]; then
+            if [[ "$CANARYINSTDIR" != /home/* ]]; then
                 sudo rm -rf $CANARYINSTDIR
             else
                 rm -rf $CANARYINSTDIR
@@ -432,7 +432,7 @@ uninst () {
                 start
             fi
             echo "Removing install directory..."
-            if [[ "$PTBINSTDIR" != "/home/*" ]]; then
+            if [[ "$PTBINSTDIR" != /home/* ]]; then
                 sudo rm -rf $PTBINSTDIR
             else
                 rm -rf $PTBINSTDIR
@@ -455,7 +455,7 @@ uninst () {
                 start
             fi
             echo "Removing install directory..."
-            if [[ "$STABLEINSTDIR" != "/home/*" ]]; then
+            if [[ "$STABLEINSTDIR" != /home/* ]]; then
                 sudo rm -rf $STABLEINSTDIR
             else
                 rm -rf $STABLEINSTDIR
@@ -601,7 +601,7 @@ main () {
             else
                 read -p "Input the Discord directory to install BetterDiscord to: " DIR
             fi
-            if [[ "$DIR" != /* ]];then
+            if [[ "$DIR" != /* ]]; then
                 echo "Invalid directory format; use full directory path.  Ex: '/home/simonizor/DiscordCanary'"
                 DIR=""
                 start

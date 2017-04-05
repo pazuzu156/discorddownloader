@@ -1,2 +1,2 @@
-DDVER="1.5.5"
-X="v1.5.5 - discorddownloader has been rewritten to use 'dialog' as a GUI and to clean up a few things.  Install 'dialog' to check out the new GUI!"
+DDVER="1.5.6"
+X="v1.5.6 - Check conf file before installing Discord versions.  Fixed uninstall if existing install detected to run properly."

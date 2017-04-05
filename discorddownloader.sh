@@ -5,8 +5,8 @@
 # Dependencies: Required: 'wget', 'curl'; Optional: 'dialog' (discorddownloader GUI); 'nodejs', 'npm', 'zip' (BetterDiscord); 'python3.x', 'python3-pip', 'psutil' (mydiscord).
 # Description: A script that can install all versions of Discord. It can also install mydiscord and BetterDiscord. If you have 'dialog' installed, a GUI will automatically be shown.
 
-DDVER="1.5.5"
-X="v1.5.5 - discorddownloader has been rewritten to use 'dialog' as a GUI and to clean up a few things.  Install 'dialog' to check out the new GUI!"
+DDVER="1.5.6"
+X="v1.5.6 - Check conf file before installing Discord versions.  Fixed uninstall if existing install detected to run properly."
 # ^^ Remember to update these and version.txt every release!
 SCRIPTNAME="$0"
 
@@ -125,6 +125,18 @@ start () {
 startinst () {
     case $1 in
         1*) # Canary
+            if [ -f ~/.config/discorddownloader/canarydir.conf ]; then
+                CANARYINSTDIR=$(sed -n '1p' ~/.config/discorddownloader/canarydir.conf)
+                CANARYISINST="1"
+                read -p "DiscordCanary is already installed; remove and proceed with install? Y/N " -n 1 -r
+                echo
+                if [[ $REPLY =~ ^[Yy]$ ]];then
+                    uninst "1"
+                else
+                    echo "DiscordCanary was not installed."
+                    start
+                fi
+            fi
             programisinstalled "dialog"
             if [ "$return" = "1" ]; then
                 REPLY=$(dialog --stdout --backtitle "discorddownloader - Install Discord" --menu "Where would you like to install DiscordCanary?" 0 0 2 1 "/opt/DiscordCanary" 2 "Use a custom directory")
@@ -163,6 +175,18 @@ startinst () {
             esac
             ;;
         2*) # PTB
+            if [ -f ~/.config/discorddownloader/ptbdir.conf ]; then
+                PTBINSTDIR=$(sed -n '1p' ~/.config/discorddownloader/ptbdir.conf)
+                PTBISINST="1"
+                read -p "DiscordPTB is already installed; remove and proceed with install? Y/N " -n 1 -r
+                echo
+                if [[ $REPLY =~ ^[Yy]$ ]];then
+                    uninst "2"
+                else
+                    echo "DiscordPTB was not installed."
+                    start
+                fi
+            fi
             programisinstalled "dialog"
             if [ "$return" = "1" ]; then
                 REPLY=$(dialog --stdout --backtitle "discorddownloader - Install Discord" --menu "Where would you like to install DiscordPTB?" 0 0 2 1 "/opt/DiscordPTB" 2 "Use a custom directory")
@@ -201,6 +225,18 @@ startinst () {
             esac
             ;;
         3*) # Stable
+            if [ -f ~/.config/discorddownloader/stabledir.conf ]; then
+                STABLEINSTDIR=$(sed -n '1p' ~/.config/discorddownloader/stabledir.conf)
+                STABLEISINST="1"
+                read -p "Discord is already installed; remove and proceed with install? Y/N " -n 1 -r
+                echo
+                if [[ $REPLY =~ ^[Yy]$ ]];then
+                    uninst "3"
+                else
+                    echo "Discord was not installed."
+                    start
+                fi
+            fi
             programisinstalled "dialog"
             if [ "$return" = "1" ]; then
                 REPLY=$(dialog --stdout --backtitle "discorddownloader - Install Discord" --menu "Where would you like to install Discord?" 0 0 2 1 "/opt/Discord" 2 "Use a custom directory")
@@ -249,7 +285,7 @@ canaryinst () {
         echo
         if [[ $REPLY =~ ^[Yy]$ ]];then
             CANARYINSTDIR="$DIR"
-            uninst "DiscordCanary"
+            uninst "1"
         else
             echo "DiscordCanary was not installed."
             start
@@ -289,7 +325,7 @@ ptbinst () {
         echo
         if [[ $REPLY =~ ^[Yy]$ ]];then
             PTBINSTDIR="$DIR"
-            uninst "DiscordPTB"
+            uninst "2"
         else
             echo "DiscordPTB was not installed."
             start
@@ -329,7 +365,7 @@ stableinst () {
         echo
         if [[ $REPLY =~ ^[Yy]$ ]];then
             STABLEINSTDIR="$DIR"
-            uninst "Discord"
+            uninst "3"
         else
             echo "Discord was not installed."
             start

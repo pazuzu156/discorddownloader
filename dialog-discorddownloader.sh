@@ -105,7 +105,7 @@ updatecheck () {
 start () {
     programisinstalled "dialog"
     if [ "$return" = "1" ]; then
-        MAINCHOICE=$(dialog --stdout --backtitle discorddownloader --menu "Welcome to discorddownloader\nVersion v$DDVER\nWhat would you like to do?" 0 0 5 1 "Install Discord" 2 "Install mydiscord" 3 "Install BetterDiscord" 4 "Uninstall Discord" 5 Exit)
+        MAINCHOICE=$(dialog --stdout --backtitle discorddownloader --no-cancel --menu "Welcome to discorddownloader\nVersion v$DDVER\nWhat would you like to do?" 0 0 5 1 "Install Discord" 2 "Install mydiscord" 3 "Install BetterDiscord" 4 "Uninstall Discord" 5 Exit)
         main "$MAINCHOICE"
         exit 0
     else
@@ -127,7 +127,7 @@ startinst () {
         1*) # Canary
             programisinstalled "dialog"
             if [ "$return" = "1" ]; then
-                REPLY=$(dialog --stdout --backtitle discorddownloader --menu "Where would you like to install DiscordCanary?" 0 0 2 1 "/opt/DiscordCanary" 2 "Use a custom directory")
+                REPLY=$(dialog --stdout --backtitle "discorddownloader - Install Discord" --menu "Where would you like to install DiscordCanary?" 0 0 2 1 "/opt/DiscordCanary" 2 "Use a custom directory")
             else
                 echo "Where would you like to install DiscordCanary?"
                 echo "1 - /opt/DiscordCanary"
@@ -143,14 +143,14 @@ startinst () {
                 2) # Custom
                     programisinstalled "dialog"
                     if [ "$return" = "1" ]; then
-                        DIR=$(dialog --stdout --backtitle discorddownloader --dselect ~/ 0 0)
+                        DIR=$(dialog --stdout --backtitle "discorddownloader - Install Discord" --dselect ~/ 0 0)
                     else
                         read -p "Where would you like to install DiscordCanary? Ex: '/home/simonizor/DiscordCanary'" DIR
                     fi
                     if [[ "$DIR" != /* ]];then
                         echo "Invalid directory format; use full directory path.  Ex: '/home/simonizor/DiscordCanary'"
                         DIR=""
-                        main "DiscordCanary"
+                        startinst "1"
                         exit 0
                     fi
                     if [ "${DIR: -1}" = "/" ]; then
@@ -165,7 +165,7 @@ startinst () {
         2*) # PTB
             programisinstalled "dialog"
             if [ "$return" = "1" ]; then
-                REPLY=$(dialog --stdout --backtitle discorddownloader --menu "Where would you like to install DiscordPTB?" 0 0 2 1 "/opt/DiscordPTB" 2 "Use a custom directory")
+                REPLY=$(dialog --stdout --backtitle "discorddownloader - Install Discord" --menu "Where would you like to install DiscordPTB?" 0 0 2 1 "/opt/DiscordPTB" 2 "Use a custom directory")
             else
                 echo "Where would you like to install DiscordPTB?"
                 echo "1 - /opt/DiscordPTB"
@@ -181,14 +181,14 @@ startinst () {
                 2) # Custom
                     programisinstalled "dialog"
                     if [ "$return" = "1" ]; then
-                        DIR=$(dialog --stdout --backtitle discorddownloader --dselect ~/ 0 0)
+                        DIR=$(dialog --stdout --backtitle "discorddownloader - Install Discord" --dselect ~/ 0 0)
                     else
                         read -p "Where would you like to install DiscordPTB? Ex: '/home/simonizor/DiscordPTB'" DIR
                     fi
                     if [[ "$DIR" != /* ]];then
                         echo "Invalid directory format; use full directory path.  Ex: '/home/simonizor/DiscordPTB'"
                         DIR=""
-                        main "DiscordPTB"
+                        startinst "2"
                         exit 0
                     fi
                     if [ "${DIR: -1}" = "/" ]; then
@@ -203,7 +203,7 @@ startinst () {
         3*) # Stable
             programisinstalled "dialog"
             if [ "$return" = "1" ]; then
-                REPLY=$(dialog --stdout --backtitle discorddownloader --menu "Where would you like to install Discord?" 0 0 2 1 "/opt/Discord" 2 "Use a custom directory")
+                REPLY=$(dialog --stdout --backtitle "discorddownloader - Install Discord" --menu "Where would you like to install Discord?" 0 0 2 1 "/opt/Discord" 2 "Use a custom directory")
             else
                 echo "Where would you like to install Discord?"
                 echo "1 - /opt/Discord"
@@ -219,14 +219,14 @@ startinst () {
                 2) # Custom
                     programisinstalled "dialog"
                     if [ "$return" = "1" ]; then
-                        DIR=$(dialog --stdout --backtitle discorddownloader --dselect ~/ 0 0)
+                        DIR=$(dialog --stdout --backtitle "discorddownloader - Install Discord" --dselect ~/ 0 0)
                     else
                         read -p "Where would you like to install Discord? Ex: '/home/simonizor/Discord'" DIR
                     fi
                     if [[ "$DIR" != /* ]];then
                         echo "Invalid directory format; use full directory path.  Ex: '/home/simonizor/Discord'"
                         DIR=""
-                        main "Discord"
+                        startinst "3"
                         exit 0
                     fi
                     if [ "${DIR: -1}" = "/" ]; then
@@ -238,6 +238,8 @@ startinst () {
                     start
             esac
             ;;
+        *)
+            start
     esac
 }
 
@@ -525,7 +527,7 @@ main () {
         1*)
             programisinstalled "dialog"
             if [ "$return" = "1" ]; then
-                VERCHOICE=$(dialog --stdout --backtitle discorddownloader --menu "Install or update:" 0 0 3 1 DiscordCanary 2 DiscordPTB 3 "Discord Stable")
+                VERCHOICE=$(dialog --stdout --backtitle "discorddownloader - Install Discord" --menu "Install or update:" 0 0 3 1 DiscordCanary 2 DiscordPTB 3 "Discord Stable")
                 startinst "$VERCHOICE"
                 exit 0
             else
@@ -555,15 +557,14 @@ main () {
             fi
             programisinstalled "dialog"
             if [ "$return" = "1" ]; then
-                DIR=$(dialog --stdout --backtitle discorddownloader --dselect /opt/ 0 0)
+                DIR=$(dialog --stdout --backtitle "discorddownloader -- Install BetterDiscord" --dselect /opt/ 0 0)
             else
-                read -p "Where would you like to install DiscordCanary? Ex: '/home/simonizor/DiscordCanary'" DIR
+                read -p "Input the Discord directory to install BetterDiscord to: " DIR
             fi
             if [[ "$DIR" != /* ]];then
                 echo "Invalid directory format; use full directory path.  Ex: '/home/simonizor/DiscordCanary'"
                 DIR=""
-                main "DiscordCanary"
-                exit 0
+                start
             fi
             if [ "${DIR: -1}" = "/" ]; then
                 DIR="${DIR::-1}"
@@ -591,76 +592,76 @@ main () {
             if [[ "$CANARYISINST" = "1" && "$PTBISINST" = "1" && "$STABLEISINST" = "1" ]]; then
                 programisinstalled "dialog"
                 if [ "$return" = "1" ]; then
-                    REPLY=$(dialog --stdout --backtitle discorddownloader --menu "Uninstall:" 0 0 3 1 DiscordCanary 2 DiscordPTB 3 "Discord Stable")
+                    REPLY=$(dialog --stdout --backtitle "discorddownloader - Uninstall" --menu "Uninstall:" 0 0 3 1 DiscordCanary 2 DiscordPTB 3 "Discord Stable")
                 else
-                    echo "DiscordCanary"
-                    echo "DiscordPTB"
-                    echo "Discord Stable"
+                    echo "1 - DiscordCanary"
+                    echo "2 - DiscordPTB"
+                    echo "3 - Discord Stable"
                     echo "Return to main menu"
-                    read -p "Choice? " -r
+                    read -p "Choice? " -n 1 -r
                     echo
                 fi
             elif [[ "$CANARYISINST" = "1" && "$PTBISINST" = "1" ]]; then
                 programisinstalled "dialog"
                 if [ "$return" = "1" ]; then
-                    REPLY=$(dialog --stdout --backtitle discorddownloader --menu "Uninstall:" 0 0 2 1 DiscordCanary 2 DiscordPTB)
+                    REPLY=$(dialog --stdout --backtitle "discorddownloader - Uninstall" --menu "Uninstall:" 0 0 2 1 DiscordCanary 2 DiscordPTB)
                 else
-                    echo "DiscordCanary"
-                    echo "DiscordPTB"
+                    echo "1 - DiscordCanary"
+                    echo "2 - DiscordPTB"
                     echo "Return to main menu"
-                    read -p "Choice? " -r
+                    read -p "Choice? " -n 1 -r
                     echo
                 fi
             elif [[ "$CANARYISINST" = "1" && "$STABLEISINST" = "1" ]]; then
                 programisinstalled "dialog"
                 if [ "$return" = "1" ]; then
-                    REPLY=$(dialog --stdout --backtitle discorddownloader --menu "Uninstall:" 0 0 2 1 DiscordCanary 3 "Discord Stable")
+                    REPLY=$(dialog --stdout --backtitle "discorddownloader - Uninstall" --menu "Uninstall:" 0 0 2 1 DiscordCanary 3 "Discord Stable")
                 else
-                    echo "DiscordCanary"
-                    echo "Discord Stable"
+                    echo "1 - DiscordCanary"
+                    echo "3 - Discord Stable"
                     echo "Return to main menu"
-                    read -p "Choice? " -r
+                    read -p "Choice? " -n 1 -r
                     echo
                 fi
             elif [[ "$CANARYISINST" = "1" ]]; then
                 programisinstalled "dialog"
                 if [ "$return" = "1" ]; then
-                    REPLY=$(dialog --stdout --backtitle discorddownloader --menu "Uninstall:" 0 0 1 1 DiscordCanary)
+                    REPLY=$(dialog --stdout --backtitle "discorddownloader - Uninstall" --menu "Uninstall:" 0 0 1 1 DiscordCanary)
                 else
-                    echo "DiscordCanary"
+                    echo "1 - DiscordCanary"
                     echo "Return to main menu"
-                    read -p "Choice? " -r
+                    read -p "Choice? " -n 1 -r
                     echo
                 fi
             elif [[ "$PTBISINST" = "1" && "$STABLEISINST" = "1" ]]; then
                 programisinstalled "dialog"
                 if [ "$return" = "1" ]; then
-                    REPLY=$(dialog --stdout --backtitle discorddownloader --menu "Uninstall:" 0 0 2 2 DiscordPTB 3 "Discord Stable")
+                    REPLY=$(dialog --stdout --backtitle "discorddownloader - Uninstall" --menu "Uninstall:" 0 0 2 2 DiscordPTB 3 "Discord Stable")
                 else
-                    echo "DiscordPTB"
-                    echo "Discord Stable"
+                    echo "2 - DiscordPTB"
+                    echo "3 - Discord Stable"
                     echo "Return to main menu"
-                    read -p "Choice? " -r
+                    read -p "Choice? " -n 1 -r
                     echo
                 fi
             elif [[ "$PTBISINST" = "1" ]]; then
                 programisinstalled "dialog"
                 if [ "$return" = "1" ]; then
-                    REPLY=$(dialog --stdout --backtitle discorddownloader --menu "Uninstall:" 0 0 1 2 DiscordPTB)
+                    REPLY=$(dialog --stdout --backtitle "discorddownloader - Uninstall" --menu "Uninstall:" 0 0 1 2 DiscordPTB)
                 else
-                    echo "DiscordPTB"
+                    echo "2 - DiscordPTB"
                     echo "Return to main menu"
-                    read -p "Choice? " -r
+                    read -p "Choice? " -n 1 -r
                     echo
                 fi
             elif [[ "$STABLEISINST" = "1" ]]; then
                 programisinstalled "dialog"
                 if [ "$return" = "1" ]; then
-                    REPLY=$(dialog --stdout --backtitle discorddownloader --menu "Uninstall:" 0 0 1 3 "Discord Stable")
+                    REPLY=$(dialog --stdout --backtitle "discorddownloader - Uninstall" --menu "Uninstall:" 0 0 1 3 "Discord Stable")
                 else
-                    echo "Discord Stable"
+                    echo "3 - Discord Stable"
                     echo "Return to main menu"
-                    read -p "Choice? " -r
+                    read -p "Choice? " -n 1 -r
                     echo
                 fi
             else
@@ -673,12 +674,8 @@ main () {
             echo "Exiting..."
             exit 0
             ;;
-        R*)
-            start
-            ;;
         *)
-            echo "Exiting..."
-            exit 0
+            start
             ;;
     esac
 }

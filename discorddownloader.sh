@@ -299,7 +299,7 @@ canaryinst () {
     echo "Extracting DiscordCanary to /tmp ..."
     tar -xzvf /tmp/discord-linux.tar.gz -C /tmp/
     echo "Moving /tmp/DiscordCanary/ to" "$DIR ..."
-    if [[ "$DIR" != /home/* ]]; then
+    if [[ "$DIR" != "/home/*" ]]; then
         sudo mv /tmp/DiscordCanary/ $DIR/
     else
         mv /tmp/DiscordCanary/ $DIR/
@@ -311,7 +311,7 @@ canaryinst () {
     sudo ln -s $DIR/DiscordCanary /usr/bin/DiscordCanary
     sudo ln -s $DIR /usr/share/discord-canary
     echo "Creating config file..."
-    if [ ! -d "~/.config/discorddownloader" ];then
+    if [ ! -d ~/.config/discorddownloader ];then
         mkdir ~/.config/discorddownloader
     fi
     echo "$DIR" > ~/.config/discorddownloader/canarydir.conf
@@ -339,7 +339,7 @@ ptbinst () {
     echo "Extracting DiscordPTB to /tmp ..."
     tar -xzvf /tmp/discord-linux.tar.gz -C /tmp/
     echo "Moving /tmp/DiscordPTB/ to" "$DIR ..."
-    if [[ "$DIR" != /home/* ]]; then
+    if [[ "$DIR" != "/home/*" ]]; then
         sudo mv /tmp/DiscordPTB/ $DIR/
     else
         mv /tmp/DiscordPTB/ $DIR/
@@ -351,7 +351,7 @@ ptbinst () {
     sudo ln -s $DIR/DiscordPTB /usr/bin/DiscordPTB
     sudo ln -s $DIR /usr/share/discord-ptb
     echo "Creating config file..."
-    if [ ! -d "~/.config/discorddownloader" ];then
+    if [ ! -d ~/.config/discorddownloader ];then
         mkdir ~/.config/discorddownloader
     fi
     echo "$DIR" > ~/.config/discorddownloader/ptbdir.conf
@@ -379,7 +379,7 @@ stableinst () {
     echo "Extracting Discord to /tmp ..."
     tar -xzvf /tmp/discord-linux.tar.gz -C /tmp/
     echo "Moving /tmp/Discord/ to" "$DIR ..."
-    if [[ "$DIR" != /home/* ]]; then
+    if [[ "$DIR" != "/home/*" ]]; then
         sudo mv /tmp/Discord/ $DIR/
     else
         mv /tmp/Discord/ $DIR/
@@ -391,7 +391,7 @@ stableinst () {
     sudo ln -s $DIR/Discord /usr/bin/Discord
     sudo ln -s $DIR /usr/share/discord
     echo "Creating config file..."
-    if [ ! -d "~/.config/discorddownloader" ];then
+    if [ ! -d ~/.config/discorddownloader ];then
         mkdir ~/.config/discorddownloader
     fi
     echo "$DIR" > ~/.config/discorddownloader/stabledir.conf

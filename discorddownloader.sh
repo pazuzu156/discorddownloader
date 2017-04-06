@@ -527,11 +527,14 @@ mydiscordinst () {
 
 betterinst () {
     echo "Installing BetterDiscord to" "$DIR" "..."
-    read -p "Closing any open Discord instances; press ENTER to continue."
-    killall -SIGKILL Discord
-    killall -SIGKILL DiscordCanary
-    killall -SIGKILL DiscordPTB
-    
+    read -p "Closing relevant open Discord instances; press ENTER to continue."
+    if [ -f "$DIR/Discord" ]; then
+        killall -SIGKILL Discord
+    elif [ -f "$DIR/DiscordCanary" ]; then
+        killall -SIGKILL DiscordCanary
+    elif [ -f "$DIR/DiscordPTB" ]; then
+        killall -SIGKILL DiscordPTB
+    fi
     programisinstalled "asar"
     if [ "$return" = "0" ]; then
         echo "Installing asar..."

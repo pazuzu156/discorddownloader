@@ -5,8 +5,8 @@
 # Dependencies: Required: 'wget', 'curl'; Optional: 'dialog' (discorddownloader GUI); 'nodejs', 'npm', 'zip' (BetterDiscord); 'python3.x', 'python3-pip', 'psutil' (mydiscord).
 # Description: A script that can install all versions of Discord. It can also install mydiscord and BetterDiscord. If you have 'dialog' installed, a GUI will automatically be shown.
 
-DDVER="1.6.4"
-X="v1.6.4 - Changed BetterDiscord install to use master version from github; if you have any issues, let me know and I'll switch back to the old method. Also added warning about BetterDiscord settings menu currently not working in Canary and PTB."
+DDVER="1.6.5"
+X="v1.6.5 - Kill Discord processes before uninstalling."
 # ^^ Remember to update these and version.txt every release!
 SCRIPTNAME="$0"
 
@@ -446,6 +446,7 @@ uninst () {
                 clear
                 start
             fi
+            killall -SIGKILL DiscordCanary
             echo "Removing install directory..."
             sudo rm -rf $CANARYINSTDIR
             echo "Removing symbolic links..."
@@ -468,6 +469,7 @@ uninst () {
                 clear
                 start
             fi
+            killall -SIGKILL DiscordPTB
             echo "Removing install directory..."
             sudo rm -rf $PTBINSTDIR
             echo "Removing symbolic links..."
@@ -490,6 +492,7 @@ uninst () {
                 clear
                 start
             fi
+            killall -SIGKILL Discord
             echo "Removing install directory..."
             sudo rm -rf $STABLEINSTDIR
             echo "Removing symbolic links..."

@@ -1,2 +1,2 @@
-DDVER="1.6.4"
-X="v1.6.4 - Changed BetterDiscord install to use master version from github; if you have any issues, let me know and I'll switch back to the old method. Also added warning about BetterDiscord settings menu currently not working in Canary and PTB."
+DDVER="1.6.5"
+X="v1.6.5 - Kill Discord processes before uninstalling."

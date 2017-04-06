@@ -5,8 +5,8 @@
 # Dependencies: Required: 'wget', 'curl'; Optional: 'dialog' (discorddownloader GUI); 'nodejs', 'npm', 'zip' (BetterDiscord); 'python3.x', 'python3-pip', 'psutil' (mydiscord).
 # Description: A script that can install all versions of Discord. It can also install mydiscord and BetterDiscord. If you have 'dialog' installed, a GUI will automatically be shown.
 
-DDVER="1.6.3"
-X="v1.6.3 - Changed most echos to read -p so user can actually read output.  Also put in clears to get rid of some of the mess in terminal."
+DDVER="1.6.4"
+X="v1.6.4 - Changed BetterDiscord install to use master version from github; if you have any issues, let me know and I'll switch back to the old method. Also added warning about BetterDiscord settings menu currently not working in Canary and PTB."
 # ^^ Remember to update these and version.txt every release!
 SCRIPTNAME="$0"
 
@@ -454,6 +454,7 @@ uninst () {
             sudo rm -f /usr/bin/DiscordCanary
             sudo rm -f /usr/share/discord-canary
             rm -f ~/.config/discorddownloader/canarydir.conf
+            rm -f ~/.config/discorddownloader/BD.conf
             CANARYISINST="0"
             read -p "DiscordCanary has been uninstalled; press ENTER to return to main menu."
             clear
@@ -475,6 +476,7 @@ uninst () {
             sudo rm -f /usr/bin/DiscordPTB
             sudo rm -f /usr/share/discord-ptb
             rm -f ~/.config/discorddownloader/ptbdir.conf
+            rm -f ~/.config/discorddownloader/BD.conf
             PTBISINST="0"
             read -p "DiscordPTB has been uninstalled; press ENTER to return to main menu."
             clear
@@ -496,6 +498,7 @@ uninst () {
             sudo rm -f /usr/bin/Discord
             sudo rm -f /usr/share/discord
             rm -f ~/.config/discorddownloader/stabledir.conf
+            rm -f ~/.config/discorddownloader/BD.conf
             STABLEISINST="0"
             read -p "Discord has been uninstalled; press ENTER to return to main menu."
             clear
@@ -524,7 +527,7 @@ mydiscordinst () {
 
 betterinst () {
     echo "Installing BetterDiscord to" "$DIR" "..."
-    echo "Closing any open Discord instances"
+    read -p "Closing any open Discord instances; press ENTER to continue."
     killall -SIGKILL Discord
     killall -SIGKILL DiscordCanary
     killall -SIGKILL DiscordPTB
@@ -546,14 +549,15 @@ betterinst () {
     fi
 
     echo "Downloading BetterDiscord..."
-    wget -O /tmp/bd.zip https://github.com/Jiiks/BetterDiscordApp/archive/stable16.zip
+    wget -O /tmp/bd.zip https://github.com/Jiiks/BetterDiscordApp/archive/master.zip
 
     echo "Preparing BetterDiscord files..."
-    unzip /tmp/bd.zip 
-    sudo mv ./BetterDiscordApp-stable16 /tmp/bd
-    sudo mv /tmp/bd/lib/Utils.js /tmp/bd/lib/utils.js
-    sed -i "s/'\/var\/local'/process.env.HOME + '\/.config'/g" /tmp/bd/lib/BetterDiscord.js
-    sed -i "s/bdstorage/bdStorage/g" /tmp/bd/lib/BetterDiscord.js
+    unzip -d /tmp/ /tmp/bd.zip 
+    rm -f /tmp/bd.zip
+    # sudo mv ./BetterDiscordApp-master /tmp/bd
+    # sudo mv /tmp/bd/lib/Utils.js /tmp/bd/lib/utils.js
+    # sed -i "s/'\/var\/local'/process.env.HOME + '\/.config'/g" /tmp/bd/lib/BetterDiscord.js
+    # sed -i "s/bdstorage/bdStorage/g" /tmp/bd/lib/BetterDiscord.js
 
     echo "Removing app folder from Discord directory..."
     sudo rm -rf "$DIR/resources/app"
@@ -562,14 +566,15 @@ betterinst () {
     sudo asar e "$DIR/resources/app.asar" "$DIR/resources/app"
 
     echo "Preparing Discord files..."
-    sed "/_fs2/ a var _betterDiscord = require('betterdiscord'); var _betterDiscord2;" "$DIR/resources/app/index.js" > /tmp/bd/index.js
-    sudo mv /tmp/bd/index.js "$DIR/resources/app/index.js"
-    sed "/mainWindow = new/ a _betterDiscord2 = new _betterDiscord.BetterDiscord(mainWindow);" "$DIR/resources/app/index.js" > /tmp/bd/index.js
-    sudo mv /tmp/bd/index.js "$DIR/resources/app/index.js"
+    sed "/_fs2/ a var _betterDiscord = require('betterdiscord'); var _betterDiscord2;" "$DIR/resources/app/index.js" > /tmp/BetterDiscordApp-master/index.js
+    sudo mv /tmp/BetterDiscordApp-master/index.js "$DIR/resources/app/index.js"
+    sed "/mainWindow = new/ a _betterDiscord2 = new _betterDiscord.BetterDiscord(mainWindow);" "$DIR/resources/app/index.js" > /tmp/BetterDiscordApp-master/index.js
+    sudo mv /tmp/BetterDiscordApp-master/index.js "$DIR/resources/app/index.js"
 
     echo "Finishing up..."
-    sudo mv /tmp/bd "$DIR/resources/app/node_modules/betterdiscord"
+    sudo mv /tmp/BetterDiscordApp-master "$DIR/resources/app/node_modules/betterdiscord"
     echo "Installed" > ~/.config/discorddownloader/BD.conf
+    echo "If BetterDiscord takes a long time to load after Discord has started, try disabling the 'Public Servers' option in BetterDiscord's settings.'"
     read -p "Assuming there are no errors above, BetterDiscord has been installed. Press ENTER to return to main menu."
     start
 }
@@ -654,6 +659,15 @@ main () {
                 read -p "Discord is not installed to this directory; press ENTER to return to main menu." NUL
                 clear
                 start
+            fi
+            if [ -f "$DIR/DiscordCanary" ] || [ -f "$DIR/DiscordPTB" ]; then
+                read -p "BetterDiscord's settings menu currently does not work with the new settings menu in Canary and PTB. Continue? Y/N " -n 1 -r
+                echo
+                if [[ $REPLY =~ ^[Nn]$ ]]; then
+                    read -p "BetterDiscord was not installed; press ENTER to continue."
+                    clear
+                    start
+                fi
             fi
             echo "$DIR"
             betterinst

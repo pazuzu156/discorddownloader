@@ -12,7 +12,7 @@ SCRIPTNAME="$0"
 
 programisinstalled () { # check if inputted program is installed using 'type'
     return=1
-    type $1 >/dev/null 2>&1 || { return=0; }
+    type "$1" >/dev/null 2>&1 || { return=0; }
 }
 
 updatescript () { # creates script used to download new version of discorddownloader from github in /tmp
@@ -74,7 +74,7 @@ updatecheck () { # checks for new version of discorddownloader using 'curl' base
     if [[ $DDVER < $VERTEST ]]; then
         echo "Installed version: $DDVER -- Current version: $VERTEST"
         echo "A new version is available!"
-        echo $UPNOTES
+        echo "$UPNOTES"
         read -p "Would you like to update? Y/N " -n 1 -r
         if [[ $REPLY =~ ^[Yy]$ ]]; then
             echo
@@ -86,13 +86,13 @@ updatecheck () { # checks for new version of discorddownloader using 'curl' base
             exit 0
         else
             echo
-            read - p "discorddownloader not updated; press ENTER to continue." NUL
+            read -p "discorddownloader not updated; press ENTER to continue." NUL
             clear
             start
         fi
     else
         echo "Installed version: $DDVER -- Current version: $VERTEST"
-        echo $UPNOTES
+        echo "$UPNOTES"
         echo "discorddownloader is up to date."
         echo
         read -p "Press ENTER to continue." NUL

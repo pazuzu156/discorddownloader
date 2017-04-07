@@ -67,7 +67,7 @@ runupdate
 EOL
 }
 
-updatecheck () { # checks for new version of discorddownloader based on $DDVER in the script vs $DDVER in version.txt on github; runs updatescript if there is a new version
+updatecheck () { # checks for new version of discorddownloader using 'curl' based on $DDVER in the script vs $DDVER in version.txt on github; runs updatescript if there is a new version
     echo "Checking for new version..."
     UPNOTES=$(curl -v --silent https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/version.txt 2>&1 | grep X= | tr -d 'X="')
     VERTEST=$(curl -v --silent https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/version.txt 2>&1 | grep DDVER= | tr -d 'DDVER="')

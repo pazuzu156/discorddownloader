@@ -10,15 +10,12 @@ X="v1.6.5 - Kill Discord processes before uninstalling."
 # ^^ Remember to update these and version.txt every release!
 SCRIPTNAME="$0"
 
-programisinstalled () {
-    # set to 1 initially
+programisinstalled () { # check if inputted program is installed using 'type'
     return=1
-    # set to 0 if not found
     type $1 >/dev/null 2>&1 || { return=0; }
-    # return value
 }
 
-updatescript () {
+updatescript () { # creates script used to download new version of discorddownloader from github in /tmp
 cat >/tmp/updatescript.sh <<EOL
 runupdate () {
     if [ "$SCRIPTNAME" = "/usr/bin/discorddownloader" ]; then
@@ -70,7 +67,7 @@ runupdate
 EOL
 }
 
-updatecheck () {
+updatecheck () { # checks for new version of discorddownloader based on $DDVER in the script vs $DDVER in version.txt on github; runs updatescript if there is a new version
     echo "Checking for new version..."
     UPNOTES=$(curl -v --silent https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/version.txt 2>&1 | grep X= | tr -d 'X="')
     VERTEST=$(curl -v --silent https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/version.txt 2>&1 | grep DDVER= | tr -d 'DDVER="')
@@ -104,7 +101,7 @@ updatecheck () {
     fi
 }
 
-start () {
+start () { # starting options; option chosen is routed to main function which gives more options, detects errors, etc, and then routes to other functions based on optios chosen
     programisinstalled "dialog"
     if [ "$return" = "1" ]; then
         MAINCHOICE=$(dialog --stdout --backtitle discorddownloader --no-cancel --menu "Welcome to discorddownloader\nVersion $DDVER\nWhat would you like to do?" 0 0 5 1 "Install Discord" 2 "Install mydiscord" 3 "Install BetterDiscord" 4 "Uninstall Discord" 5 Exit)
@@ -125,7 +122,7 @@ start () {
     fi
 }
 
-startinst () {
+startinst () { # Discord install start; check if already installed, choose directory, output as $DIR and run inst function for version of Discord chosen
     case $1 in
         1*) # Canary
             if [ -f ~/.config/discorddownloader/canarydir.conf ]; then
@@ -304,7 +301,7 @@ startinst () {
     esac
 }
 
-canaryinst () {
+canaryinst () { # Install function for Canary; $DIR is chosen in the startinst function
     if [ -d "$DIR" ]; then
         read -p "$DIR exists; remove and proceed with install? Y/N " -n 1 -r
         echo
@@ -348,7 +345,7 @@ canaryinst () {
     start
 }
 
-ptbinst () {
+ptbinst () { # Install function for PTB; $DIR is chosen in the startinst function
     if [ -d "$DIR" ]; then
         read -p "$DIR exists; remove and proceed with install? Y/N " -n 1 -r
         echo
@@ -392,7 +389,7 @@ ptbinst () {
     start
 }
 
-stableinst () {
+stableinst () { # Install function for Stable; $DIR is chosen in the startinst function
     if [ -d "$DIR" ]; then
         read -p "$DIR exists; remove and proceed with install? Y/N " -n 1 -r
         echo
@@ -436,9 +433,9 @@ stableinst () {
     start
 }
 
-uninst () {
+uninst () { # Uninstall function; $*INSTDIR is either from the conf file or from $DIR above if installing to existing directory that conf doesn't know about
     case $1 in
-        1*)
+        1*) # Canary
             read -p "Are you sure you want to uninstall DiscordCanary? Y/N" -n 1 -r
             echo
             if [[ $REPLY =~ ^[Nn]$ ]]; then
@@ -461,7 +458,7 @@ uninst () {
             clear
             start
             ;;
-        2*)
+        2*) # PTB
             read -p "Are you sure you want to uninstall DiscordPTB? Y/N" -n 1 -r
             echo
             if [[ $REPLY =~ ^[Nn]$ ]]; then
@@ -484,7 +481,7 @@ uninst () {
             clear
             start
             ;;
-        3*)
+        3*) # Stable
             read -p "Are you sure you want to uninstall Discord? Y/N" -n 1 -r
             echo
             if [[ $REPLY =~ ^[Nn]$ ]]; then
@@ -513,7 +510,7 @@ uninst () {
     esac
 }
 
-mydiscordinst () {
+mydiscordinst () { # Install 'mydiscord' using 'python3-pip'
     programisinstalled "pip"
     if [ "$return" = "1" ]; then
         python3 -m pip install -U https://github.com/justinoboyle/MyDiscord/archive/master.zip
@@ -528,7 +525,7 @@ mydiscordinst () {
     fi
 }
 
-betterinst () {
+betterinst () { # Install 'BetterDiscord' using 'asar', 'zip', and 'sed'
     echo "Installing BetterDiscord to" "$DIR" "..."
     read -p "Closing relevant open Discord instances; press ENTER to continue."
     if [ -f "$DIR/Discord" ]; then
@@ -585,9 +582,9 @@ betterinst () {
     start
 }
 
-main () {
+main () { # main function that contains options and questions related to the option chosen in the start function.  Also detects which versions should be listed in the Uninstall list based on conf files
     case $1 in
-        1*)
+        1*) # Choose version of Discord to install
             programisinstalled "dialog"
             if [ "$return" = "1" ]; then
                 VERCHOICE=$(dialog --stdout --backtitle "discorddownloader - Install Discord" --menu "Install or update:" 0 0 3 1 DiscordCanary 2 DiscordPTB 3 "Discord Stable")
@@ -604,7 +601,7 @@ main () {
                 startinst "$REPLY"
             fi
             ;;
-        2*)
+        2*) # 'mydiscord'; check if 'BetterDiscord' is installed, give info about 'mydiscord' before routing to mydiscordinst function
             if [ -f ~/.config/discorddownloader/BD.conf ]; then
                 read -p "BetterDiscord is installed; using mydiscord with BetterDiscord may cause issues.  Continue? Y/N" -n 1 -r
                 echo
@@ -620,7 +617,7 @@ main () {
             clear
             mydiscordinst
             ;;
-        3*)
+        3*) # 'BetterDiscord'; check if 'mydiscord' is installed, give info about dependencies, check for dependencies, and route to betterinst function
             if [ -f ~/.config/discorddownloader/mydiscord.conf ]; then
                 read -p "mydiscord is installed; using BetterDiscord with mydiscord may cause issues.  Continue? Y/N" -n 1 -r
                 echo
@@ -678,7 +675,7 @@ main () {
             echo "$DIR"
             betterinst
             ;;
-        4*)
+        4*) # Uninstall; check which versions of Discord are installed based on conf files and only list versions installed
             if [ -f ~/.config/discorddownloader/canarydir.conf ]; then
                 CANARYINSTDIR=$(sed -n '1p' ~/.config/discorddownloader/canarydir.conf)
                 CANARYISINST="1"

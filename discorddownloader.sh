@@ -2,12 +2,12 @@
 # Title: discorddownloader
 # Author: simonizor
 # URL: http://www.simonizor.gq/discorddownloader
-# Dependencies: Required: 'wget', 'curl'; Optional: 'dialog' (discorddownloader GUI); 'nodejs', 'npm', 'zip' (BetterDiscord); 'python3.x', 'python3-pip', 'psutil' (mydiscord).
+# Dependencies: Required: 'wget'; Optional: 'dialog' (discorddownloader GUI); 'nodejs', 'npm', 'zip' (BetterDiscord); 'python3.x', 'python3-pip', 'psutil' (mydiscord).
 # Description: A script that can install all versions of Discord. It can also install mydiscord and BetterDiscord. If you have 'dialog' installed, a GUI will automatically be shown.
 
-DDVER="1.6.6"
-X="v1.6.6 - Fixed some minor bugs (thanks unrealcroissant)."
-# ^^ Remember to update these and version.txt every release!
+DDVER="1.6.7"
+X="v1.6.7 - Moved update check to a menu option instead of running at start.  Removed 'curl' dependency by using 'wget' for update check instead, and also changed update check to read from discorddownloader.sh instead of version.txt by piping 'wget' through 'sed -n '8p''"
+# ^^ Remember to update these every release; do not move their line position (eliminate version.txt eventually)!
 SCRIPTNAME="$0"
 
 programisinstalled () { # check if inputted program is installed using 'type'
@@ -69,8 +69,8 @@ EOL
 
 updatecheck () { # checks for new version of discorddownloader using 'curl' based on $DDVER in the script vs $DDVER in version.txt on github; runs updatescript if there is a new version
     echo "Checking for new version..."
-    UPNOTES=$(curl -v --silent https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/version.txt 2>&1 | grep X= | tr -d 'X="')
-    VERTEST=$(curl -v --silent https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/version.txt 2>&1 | grep DDVER= | tr -d 'DDVER="')
+    UPNOTES="$(wget -q "https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/discorddownloader.sh" -O - | sed -n '9p' | tr -d 'X="')"
+    VERTEST="$(wget -q "https://raw.githubusercontent.com/simoniz0r/discorddownloader/master/discorddownloader.sh" -O - | sed -n '8p' | tr -d 'DVER="')"
     if [[ $DDVER < $VERTEST ]]; then
         echo "Installed version: $DDVER -- Current version: $VERTEST"
         echo "A new version is available!"
@@ -104,7 +104,7 @@ updatecheck () { # checks for new version of discorddownloader using 'curl' base
 start () { # starting options; option chosen is routed to main function which gives more options, detects errors, etc, and then routes to other functions based on optios chosen
     programisinstalled "dialog"
     if [ "$return" = "1" ]; then
-        MAINCHOICE=$(dialog --stdout --backtitle discorddownloader --no-cancel --menu "Welcome to discorddownloader\nVersion $DDVER\nWhat would you like to do?" 0 0 5 1 "Install Discord" 2 "Install mydiscord" 3 "Install BetterDiscord" 4 "Uninstall Discord" 5 Exit)
+        MAINCHOICE=$(dialog --stdout --backtitle discorddownloader --no-cancel --menu "Welcome to discorddownloader\nVersion $DDVER\nWhat would you like to do?" 0 0 6 1 "Install Discord" 2 "Install mydiscord" 3 "Install BetterDiscord" 4 "Uninstall Discord" 5 "Update discorddownloader" 6 Exit)
         main "$MAINCHOICE"
         exit 0
     else
@@ -114,7 +114,8 @@ start () { # starting options; option chosen is routed to main function which gi
         echo "2 - Install mydiscord"
         echo "3 - Install BetterDiscord to existing Discord install"
         echo "4 - Uninstall Discord"
-        echo "5 - Exit script"
+        echo "5 - Update discorddownloader"
+        echo "6 - Exit script"
         read -p "Choice?" -n 1 -r
         echo
         clear
@@ -772,6 +773,9 @@ main () { # main function that contains options and questions related to the opt
             uninst "$REPLY"
             ;;
         5)
+            updatecheck
+            ;;
+        6)
             clear
             echo "Exiting..."
             exit 0
@@ -786,13 +790,7 @@ main () { # main function that contains options and questions related to the opt
 if [ "$EUID" -ne 0 ]; then
     programisinstalled "wget"
     if [ "$return" = "1" ]; then
-        programisinstalled "curl"
-        if [ "$return" = "1" ]; then
-            updatecheck
-        else
-            read -p "curl is not installed; press ENTER to run discorddownloader without checking for updates!" NUL
-            start
-        fi
+       start
     else
         echo "wget is not installed!"
         exit 0

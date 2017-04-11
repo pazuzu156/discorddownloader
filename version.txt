@@ -1,2 +1,2 @@
-DDVER="1.6.6"
-X="v1.6.6 - Fixed some minor bugs (thanks unrealcroissant)."
+DDVER="1.6.7"
+X="v1.6.7 - Moved update check to a menu option instead of running at start.  Removed 'curl' dependency by using 'wget' for update check instead, and also changed update check to read from discorddownloader.sh instead of version.txt by piping 'wget' through 'sed -n '8p''"
